@@ -1,0 +1,32 @@
+{
+  "name": "typescript-express-template",
+  "version": "1.0.0",
+  "description": "Base Template For Starting Express API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prettier": "prettier 'src/**/*.ts'",
+    "prettier:fix": "prettier --write 'src/**/*.ts'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yanmifeakeju/typescript-express-template.git"
+  },
+  "keywords": [],
+  "author": "Oluwayanmife Akeju",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yanmifeakeju/typescript-express-template/issues"
+  },
+  "homepage": "https://github.com/yanmifeakeju/typescript-express-template#readme",
+  "devDependencies": {
+    "eslint": "^8.17.0",
+    "prettier": "^2.7.1",
+    "typescript": "^4.7.3"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "mongoose": "^6.3.8"
+  }
+}
