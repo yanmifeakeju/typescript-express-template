@@ -5,8 +5,6 @@ function initializeServer() {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 
-  console.log('Hello');
-
   return app;
 }
 
