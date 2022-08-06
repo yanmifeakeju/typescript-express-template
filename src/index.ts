@@ -1,7 +1,8 @@
-import v1Router from './api/v1';
+import { AddressInfo } from 'net';
+import app from './api/server';
 import logger from './lib/utils/logger';
-import initializeServer from './server';
 
-const server = initializeServer();
-server.use(v1Router);
-server.listen(process.env.PORT, () => logger.info(`Server listening on port ${process.env.PORT}`));
+const server = app.listen(process.env.PORT || 3000, () => {
+  const { port } = server.address() as AddressInfo;
+  logger.info(`Server running on ${port}`);
+});
