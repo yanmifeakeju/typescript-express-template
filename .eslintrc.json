@@ -11,6 +11,8 @@
   },
   "plugins": ["@typescript-eslint"],
   "rules": {
-    "no-console": "error"
+    "no-console": "error",
+    "prefer-template": "error",
+    "@typescript-eslint/no-unused-vars": ["error", { "args": "none" }]
   }
 }
