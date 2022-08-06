@@ -21,7 +21,7 @@ When('sends the request', async function () {
 });
 
 Then('our API should respond with a {int} HTTP status code', function (statusCode: number) {
-  assert.equal(this.response?.statusCode, 400);
+  assert.equal(this.response?.statusCode, statusCode);
 });
 
 Then('the payload of the response should be a JSON object', function () {
