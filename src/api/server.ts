@@ -7,8 +7,8 @@ const app = express();
 
 app.use(express.json());
 
-app.use(checkEmptyPayload);
 app.use(checkContentTypeIsSet);
+app.use(checkEmptyPayload);
 app.use(checkContentTypeIsJSON);
 
 app.use(v1Router);
