@@ -50,3 +50,11 @@ Feature: Create User
       | last_name  | string |
       | email      | string |
       | password   | string |
+
+  Scenario: Minimal Valid User
+    When the client creates a POST request to /users
+    And attaches a valid Create User payload
+    And sends the request
+    Then our API should respond with a 201 HTTP status code
+    And the payload of the response should be a JSON object
+    And the user details should be added to the database

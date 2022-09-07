@@ -1,6 +1,7 @@
 import { Then, When } from '@cucumber/cucumber';
 import assert from 'assert';
 import superagent from 'superagent';
+import { postgresClient } from '../../src/infrastructure/database/postgres/connection';
 import Chance from 'chance';
 
 const chance = new Chance();
@@ -64,6 +65,18 @@ When(
   }
 );
 
+When('attaches a valid Create User payload', function () {
+  const payload: Record<string, unknown> = {
+    first_name: chance.first(),
+    last_name: chance.last(),
+    email: chance.email(),
+    password: chance.string({ length: 10, alpha: true })
+  };
+
+  this.requestPayload = payload;
+  this.request.send(JSON.stringify(payload)).set('Content-Type', 'application/json');
+});
+
 When('sends the request', async function () {
   try {
     this.response = await this.request;
@@ -87,4 +100,9 @@ Then('the payload of the response should be a JSON object', function () {
 
 Then('contains a message property which says {string}', function (message: string) {
   assert.equal(this.responsePayload.message, message);
+});
+
+Then('the user details should be added to the database', async function () {
+  const user = await postgresClient.user.findMany({ where: { email: this.requestPayload.email } });
+  assert.equal(user[0].email, this.requestPayload.email);
 });

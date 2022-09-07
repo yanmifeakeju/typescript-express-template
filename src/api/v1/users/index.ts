@@ -27,7 +27,7 @@ router.use('/', async (req, res, next) => {
     }
 
     await postgresClient.user.create({ data: req.body });
-    res.status(200).json({ success: true, message: 'Welcome to the API' });
+    res.status(201).json({ success: true, message: 'Welcome to the API' });
   } catch (error) {
     next(error);
   }

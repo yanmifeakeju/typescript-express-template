@@ -16,7 +16,7 @@
     "build": "tsc",
     "start": "npm run build && node -r dotenv/config dist/index.js",
     "start:dev": "nodemon -r dotenv/config src/index.ts",
-    "start:test": "dotenv -e .env.test -- node dist/index.js",
+    "start:test": "dotenv -e .env.test -- nodemon dist/index.js",
     "prisma:migrate-dev": "prisma migrate dev --schema=src/infrastructure/database/prisma/schema.prisma",
     "prisma:db-push": "prisma db push --schema=src/infrastructure/database/prisma/schema.prisma",
     "prisma:migrate-deploy": "prisma migrate deploy --schema=src/infrastructure/database/prisma/schema.prisma",
