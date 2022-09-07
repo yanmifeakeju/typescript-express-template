@@ -1,5 +1,3 @@
-import 'dotenv/config';
-
 import { Then, When } from '@cucumber/cucumber';
 import assert from 'assert';
 import superagent from 'superagent';
@@ -42,6 +40,29 @@ When('attaches a Create User payload which is missing the {string} field', funct
   fieldsToDelete.forEach((field: string | number) => delete payload[field]);
   this.request.send(JSON.stringify(payload)).set('Content-Type', 'application/json');
 });
+
+When(
+  'attaches a Create User payload where the {string} field is not a {string}',
+  function (field: string, type: string) {
+    const payload: Record<string, unknown> = {
+      first_name: chance.first(),
+      last_name: chance.last(),
+      email: chance.email(),
+      password: chance.string({ length: 10, alpha: true })
+    };
+
+    const sampleValues: Record<string, Record<'is' | 'not', unknown>> = {
+      string: {
+        is: 'string',
+        not: 10
+      }
+    };
+
+    payload[field] = sampleValues[type].not;
+
+    this.request.send(JSON.stringify(payload)).set('Content-Type', 'application/json');
+  }
+);
 
 When('sends the request', async function () {
   try {

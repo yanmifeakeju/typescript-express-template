@@ -8,7 +8,6 @@
     "npm": "8.*"
   },
   "scripts": {
-    "test": "npx cucumber-js -p default",
     "lint": "eslint src",
     "prettier": "prettier 'src/**/*.ts'",
     "prettier:fix": "prettier --write 'src/**/*.ts'",
@@ -17,10 +16,13 @@
     "build": "tsc",
     "start": "npm run build && node -r dotenv/config dist/index.js",
     "start:dev": "nodemon -r dotenv/config src/index.ts",
+    "start:test": "dotenv -e .env.test -- node dist/index.js",
     "prisma:migrate-dev": "prisma migrate dev --schema=src/infrastructure/database/prisma/schema.prisma",
     "prisma:db-push": "prisma db push --schema=src/infrastructure/database/prisma/schema.prisma",
     "prisma:migrate-deploy": "prisma migrate deploy --schema=src/infrastructure/database/prisma/schema.prisma",
-    "prisma:generate": "prisma generate --schema=src/infrastructure/database/prisma/schema.prisma"
+    "prisma:generate": "prisma generate --schema=src/infrastructure/database/prisma/schema.prisma",
+    "test:e2e": "npm run migrate:postgres:test && dotenv -e .env.test -- npx cucumber-js -p default",
+    "migrate:postgres:test": "dotenv -e .env.test -- npm run prisma:migrate-dev --name postgres-init"
   },
   "repository": {
     "type": "git",
