@@ -11,7 +11,6 @@ When('the client creates a POST request to \\/users', function () {
 });
 
 When('attaches a generic empty payload', function () {
-  // Write code here that turns the phrase above into concrete actions
   return undefined;
 });
 
