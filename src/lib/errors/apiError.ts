@@ -11,13 +11,14 @@ type ErrorType = keyof typeof code;
 
 class ApiError<T> extends Error {
   statusCode: number;
-  data: T | undefined;
+  data?: { payload: T };
 
-  constructor(private type: ErrorType, public message: string, private error?: T) {
+  constructor(type: ErrorType, public message: string, private payload?: T) {
     super(message);
     Object.setPrototypeOf(this, ApiError.prototype);
+
     this.statusCode = code[type];
-    this.data = error ?? undefined;
+    this.data = payload && { payload };
 
     Error.captureStackTrace(this);
   }
