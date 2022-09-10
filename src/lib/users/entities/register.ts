@@ -6,8 +6,8 @@ type SaveUserFunc = (args: RegisterUserPayload) => Promise<RegisterUserResponse>
 
 export function registerUser(saveUser: SaveUserFunc) {
   return (data: RegisterUserPayload) => {
-    const { isValid, errors } = validator(RegisterUserPayloadSchema, data);
-    if (!isValid) throw new ApiError('BAD_REQUEST', 'Validation Failed', errors);
+    const { isValid, error } = validator(RegisterUserPayloadSchema, data);
+    if (!isValid) throw new ApiError('BAD_REQUEST', error, data);
 
     return saveUser(data);
   };

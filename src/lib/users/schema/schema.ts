@@ -5,7 +5,7 @@ function Nullable<T extends TSchema>(schema: T) {
 }
 
 export const UserSchema = Type.Object({
-  id: Type.String(),
+  id: Type.String({ format: 'uuid' }),
   firstName: Type.String(),
   lastName: Type.String(),
   bio: Type.Optional(Nullable(Type.String())),
@@ -14,6 +14,8 @@ export const UserSchema = Type.Object({
 });
 
 export const RegisterUserPayloadSchema = Type.Omit(UserSchema, ['id']);
-export type RegisterUserPayload = Static<typeof RegisterUserPayloadSchema>;
 export const RegisterUserResponseSchema = Type.Omit(UserSchema, ['password']);
+
+export type User = Static<typeof UserSchema>;
 export type RegisterUserResponse = Static<typeof RegisterUserResponseSchema>;
+export type RegisterUserPayload = Static<typeof RegisterUserPayloadSchema>;

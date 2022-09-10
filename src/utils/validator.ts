@@ -1,5 +1,5 @@
 import addFormats from 'ajv-formats';
-import Ajv, { AnySchema } from 'ajv';
+import Ajv, { AnySchema, DefinedError } from 'ajv';
 
 const ajv = addFormats(new Ajv({}), [
   'date-time',
@@ -20,9 +20,35 @@ const ajv = addFormats(new Ajv({}), [
   .addKeyword('kind')
   .addKeyword('modifier');
 
-export function validator(schema: AnySchema, payload: unknown) {
+function generateValidationErrorMessage(err: DefinedError[]) {
+  for (const error of err) {
+    switch (error.keyword) {
+      case 'required':
+        return `Payload missing required property "${error.params.missingProperty}".`;
+      case 'format':
+        return `"${error.instancePath.split('/')[1]}" is not a valid ${error.params.format}`;
+      case 'minLength':
+      case 'maxLength':
+      case 'type':
+        return `"${error.instancePath}" ${error.message}`;
+      default:
+        break;
+    }
+  }
+
+  return 'Invalid payload.';
+}
+
+export function validator(
+  schema: AnySchema,
+  payload: unknown
+): { isValid: false; error: string } | { isValid: true; error: null } {
   const validate = ajv.compile(schema);
   const isValid = validate(payload);
 
-  return { isValid, errors: validate.errors };
+  if (!isValid) {
+    return { isValid, error: generateValidationErrorMessage(validate.errors as DefinedError[]) };
+  }
+
+  return { isValid: true, error: null };
 }

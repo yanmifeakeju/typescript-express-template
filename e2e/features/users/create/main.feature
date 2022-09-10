@@ -26,7 +26,7 @@ Feature: Create User
     And sends the request
     Then our API should respond with a 400 HTTP status code
     And the payload of the response should be a JSON object
-    And contains a message property which says "Payload must contain at least the email and password fields"
+    And contains a success property which is false
 
     Examples:
       | missingFields |
@@ -42,14 +42,14 @@ Feature: Create User
     And sends the request
     Then our API should respond with a 400 HTTP status code
     And the payload of the response should be a JSON object
-    And contains a message property which says "The email and password fields must be of type string"
+    And contains a success property which is false
 
     Examples:
-      | field      | type   |
-      | first_name | string |
-      | last_name  | string |
-      | email      | string |
-      | password   | string |
+      | field     | type   |
+      | firstName | string |
+      | lastName  | string |
+      | email     | string |
+      | password  | string |
 
   Scenario: Minimal Valid User
     When the client creates a POST request to /users
@@ -58,3 +58,4 @@ Feature: Create User
     Then our API should respond with a 201 HTTP status code
     And the payload of the response should be a JSON object
     And the user details should be added to the database
+    And contains a success property which is true

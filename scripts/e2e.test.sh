@@ -5,8 +5,7 @@ fi
 
 RETRY_INTERVAL=${RETRY_INTERVAL:-0.2}
 
-npm run docker:up
-npm run migrate:postgres:test
+npm run docker:up && npm run migrate:postgres:test
 
 npm run start:test &
 

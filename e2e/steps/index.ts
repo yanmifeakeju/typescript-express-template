@@ -7,7 +7,7 @@ import Chance from 'chance';
 const chance = new Chance();
 
 When('the client creates a POST request to \\/users', function () {
-  this.request = superagent('POST', `${process.env.SERVER_HOSTNAME}:${process.env.SERVER_PORT}/users`);
+  this.request = superagent('POST', `${process.env.SERVER_HOSTNAME}:${process.env.SERVER_PORT}/v1/users`);
 });
 
 When('attaches a generic empty payload', function () {
@@ -45,8 +45,8 @@ When(
   'attaches a Create User payload where the {string} field is not a {string}',
   function (field: string, type: string) {
     const payload: Record<string, unknown> = {
-      first_name: chance.first(),
-      last_name: chance.last(),
+      firstName: chance.first(),
+      lastName: chance.last(),
       email: chance.email(),
       password: chance.string({ length: 10, alpha: true })
     };
@@ -66,8 +66,8 @@ When(
 
 When('attaches a valid Create User payload', function () {
   const payload: Record<string, unknown> = {
-    first_name: chance.first(),
-    last_name: chance.last(),
+    firstName: chance.first(),
+    lastName: chance.last(),
     email: chance.email(),
     password: chance.string({ length: 10, alpha: true })
   };
@@ -99,6 +99,14 @@ Then('the payload of the response should be a JSON object', function () {
 
 Then('contains a message property which says {string}', function (message: string) {
   assert.equal(this.responsePayload.message, message);
+});
+
+Then('contains a success property which is false', function () {
+  assert.equal(this.responsePayload.success, false);
+});
+
+Then('contains a success property which is true', function () {
+  assert.equal(this.responsePayload.success, true);
 });
 
 Then('the user details should be added to the database', async function () {

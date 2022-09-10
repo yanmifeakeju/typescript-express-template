@@ -8,7 +8,6 @@ const registerNewUserHandler =
   (handler: registerUserHanlder) => async (req: Request, res: Response, next: NextFunction) => {
     try {
       const user = await handler(req.body);
-
       return res.status(201).json({ success: true, message: 'User created successfully.', data: { profile: user } });
     } catch (error) {
       next(error);
