@@ -1,4 +1,5 @@
 /**
+ * Haven't decided on how I want work with this config.
  * Load extra configuration I don't want to share in .env file
  */
 import convict from 'convict';
