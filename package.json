@@ -18,7 +18,7 @@
     "start:dev": "nodemon -r dotenv/config src/index.ts",
     "start:test": "dotenv -e .env.test -- nodemon dist/index.js",
     "test:e2e": "dotenv -e .env.test ./scripts/e2e.test.sh",
-    "docker:up": "docker-compose up -d",
+    "docker:up": "docker-compose up",
     "docker:down": "docker-compose down",
     "prisma:migrate-dev": "prisma migrate dev --schema=src/infrastructure/database/prisma/schema.prisma",
     "prisma:db-push": "prisma db push --schema=src/infrastructure/database/prisma/schema.prisma",
@@ -60,7 +60,6 @@
     "typescript": "^4.7.3"
   },
   "dependencies": {
-    "-": "^0.0.1",
     "@prisma/client": "^4.3.1",
     "@sinclair/typebox": "^0.24.38",
     "ajv": "^8.11.0",
@@ -68,7 +67,6 @@
     "ava": "^4.3.3",
     "bcryptjs": "^2.4.3",
     "convict": "^6.2.3",
-    "D": "^1.0.0",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "jsonwebtoken": "^8.5.1",

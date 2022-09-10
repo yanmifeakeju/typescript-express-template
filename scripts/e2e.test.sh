@@ -5,14 +5,14 @@ fi
 
 RETRY_INTERVAL=${RETRY_INTERVAL:-0.2}
 
-npm run docker:up
-if ss -lnt | grep -q :$PG_PORT; then
- until ss -lnt | grep -q :$PG_PORT; do
- sleep $RETRY_INTERVAL
-done
-fi
+docker-compose up --no-start
+docker-compose start
 
-npm run migrate:postgres:test
+if  ! npm run migrate:postgres:test; then
+  until npm run migrate:postgres:test;  do
+    sleep  $RETRY_INTERVAL
+  done
+fi
 npm run start:test &
 
 until ss -lnt | grep -q :$SERVER_PORT; do
@@ -20,6 +20,7 @@ until ss -lnt | grep -q :$SERVER_PORT; do
 done
 
 npx cucumber-js -p default
-npm run docker:down
+
+docker-compose down
 
 kill -15 0
