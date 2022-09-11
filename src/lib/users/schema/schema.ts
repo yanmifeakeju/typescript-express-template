@@ -6,9 +6,9 @@ function Nullable<T extends TSchema>(schema: T) {
 
 export const UserSchema = Type.Object({
   id: Type.String({ format: 'uuid' }),
-  firstName: Type.String(),
-  lastName: Type.String(),
-  bio: Type.Optional(Nullable(Type.String())),
+  firstName: Type.String({ minLength: 1 }),
+  lastName: Type.String({ minLength: 1 }),
+  bio: Type.Optional(Nullable(Type.String({ minLength: 100 }))),
   email: Type.String({ format: 'email' }),
   password: Type.String({ minLength: 8 })
 });

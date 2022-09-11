@@ -10,7 +10,7 @@ docker-compose start
 
 if  ! npm run migrate:postgres:test; then
   until npm run migrate:postgres:test;  do
-    sleep  $RETRY_INTERVAL
+    sleep $RETRY_INTERVAL
   done
 fi
 npm run start:test &
