@@ -26,11 +26,11 @@ function generateValidationErrorMessage(err: DefinedError[]) {
       case 'required':
         return `Payload missing required property "${error.params.missingProperty}".`;
       case 'format':
-        return `"${error.instancePath.split('/')[1]}" is not a valid ${error.params.format}`;
+        return `"${error.instancePath.replace('/', '.')}" is not a valid ${error.params.format}`;
       case 'minLength':
       case 'maxLength':
       case 'type':
-        return `"${error.instancePath}" ${error.message}`;
+        return `"${error.instancePath.replace('/', '.')}" ${error.message}`;
       default:
         break;
     }
