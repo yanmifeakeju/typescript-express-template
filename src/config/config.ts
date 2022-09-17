@@ -1,14 +1,11 @@
-/**
- * Haven't decided on how I want work with this config.
- * Load extra configuration I don't want to share in .env file
- */
-import convict from 'convict';
+import envSchema from 'env-schema';
+import { Type, Static } from '@sinclair/typebox';
 
-const env = process.env.NODE_ENV || 'development';
+const ConfigSchema = Type.Object({
+  SERVER_HOSTNAME: Type.String(),
+  SERVER_PORT: Type.Number(),
+  DATABASE_URL: Type.String()
+});
 
-const config = convict({});
-
-config.loadFile(`config/${env}.json`);
-config.validate({ allowed: 'strict' });
-
-export default config;
+type Config = Static<typeof ConfigSchema>;
+export const config = envSchema<Config>({ schema: ConfigSchema, dotenv: true });
