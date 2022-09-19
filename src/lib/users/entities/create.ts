@@ -4,11 +4,11 @@ import { CreateUserPayload, CreateUserResponse, CreateUserPayloadSchema } from '
 
 type SaveUserFunc = (args: CreateUserPayload) => Promise<CreateUserResponse>;
 
-export function create(saveUser: SaveUserFunc) {
-  return (data: CreateUserPayload) => {
+export const create = (saveUser: SaveUserFunc) => {
+  return async (data: CreateUserPayload) => {
     const { isValid, error } = validator(CreateUserPayloadSchema, data);
-    if (!isValid) return Promise.reject(new ApiError('UNPROCESSABLE_ENTITY', error, data));
+    if (!isValid) throw new ApiError('UNPROCESSABLE_ENTITY', error, data);
 
     return saveUser(data);
   };
-}
+};
