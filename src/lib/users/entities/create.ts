@@ -7,7 +7,7 @@ type SaveUserFunc = (args: CreateUserPayload) => Promise<CreateUserResponse>;
 export function create(saveUser: SaveUserFunc) {
   return (data: CreateUserPayload) => {
     const { isValid, error } = validator(CreateUserPayloadSchema, data);
-    if (!isValid) throw new ApiError('BAD_REQUEST', error, data);
+    if (!isValid) return Promise.reject(new ApiError('UNPROCESSABLE_ENTITY', error, data));
 
     return saveUser(data);
   };
