@@ -1,7 +1,6 @@
 import test from 'ava';
 import Chance from 'chance';
 import { randomUUID } from 'crypto';
-import { ApiError } from '../../errors/apiError';
 import { CreateUserPayload, CreateUserResponse } from '../schema/schema';
 import { create } from './create';
 
@@ -19,9 +18,9 @@ const payload = {
   password: chance.string({ alpha: true })
 };
 
-Object.entries(payload).forEach(([key, value]) => {
-  test.only(`returns correct error message when ${key} is missing`, async (t) => {
-    const error = await t.throwsAsync(createUser({ ...payload, [key]: undefined }));
-    t.is(error?.message, `Payload missing required property "${key}".`);
+Object.entries(payload).forEach(([field, _]) => {
+  test.only(`returns correct error message when ${field} is missing`, async (t) => {
+    const error = await t.throwsAsync(createUser({ ...payload, [field]: undefined }));
+    t.is(error?.message, `Payload missing required property "${field}".`);
   });
 });
