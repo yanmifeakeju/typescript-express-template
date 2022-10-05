@@ -1,6 +1,5 @@
-import { registerUser } from '../entities/register';
+import { create } from '../entities/create';
 import { fetchUser, saveUser } from '../query';
-import { createUser } from './registerUser';
+import { createUser } from './createUser';
 
-const save = createUser(fetchUser, saveUser);
-export const register = registerUser(save);
+export const register = create(createUser(fetchUser, saveUser));

@@ -13,9 +13,9 @@ export const UserSchema = Type.Object({
   password: Type.String({ minLength: 8 })
 });
 
-export const RegisterUserPayloadSchema = Type.Omit(UserSchema, ['id']);
-export const RegisterUserResponseSchema = Type.Omit(UserSchema, ['password']);
+export const CreateUserPayloadSchema = Type.Omit(UserSchema, ['id']);
+export const CreateUserResponseSchema = Type.Omit(UserSchema, ['password']);
 
 export type User = Static<typeof UserSchema>;
-export type RegisterUserResponse = Static<typeof RegisterUserResponseSchema>;
-export type RegisterUserPayload = Static<typeof RegisterUserPayloadSchema>;
+export type CreateUserResponse = Static<typeof CreateUserResponseSchema>;
+export type CreateUserPayload = Static<typeof CreateUserPayloadSchema>;
