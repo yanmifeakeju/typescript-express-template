@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { authHandlers } from '../../handlers/auth';
+import { authHandlers } from '../../handlers';
 
 export const authRoutes = (router: express.Router) => {
   router.post('/register', authHandlers.register);

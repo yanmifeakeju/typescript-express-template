@@ -2,9 +2,8 @@ import logger from '../utils/logger';
 import { SaveUser } from '../types/users';
 import asyncHandler from '../api/middlewares/asycHandler';
 import { NextFunction, Request, Response } from 'express';
-import { register } from '../lib/users/domain';
 
-const registerUser = (register: SaveUser) => {
+export const registerUser = (register: SaveUser) => {
   return asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     try {
       const response = await register(req.body);
@@ -14,8 +13,4 @@ const registerUser = (register: SaveUser) => {
       next(err);
     }
   });
-};
-
-export const authHandlers = {
-  register: registerUser(register)
 };
