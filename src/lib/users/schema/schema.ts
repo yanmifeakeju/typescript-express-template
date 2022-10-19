@@ -1,4 +1,4 @@
-import { Type, Static, TSchema } from '@sinclair/typebox';
+import { Static, TSchema, Type } from '@sinclair/typebox';
 
 function Nullable<T extends TSchema>(schema: T) {
   return Type.Unsafe<Static<T> | null>({ ...schema, nullable: true });
@@ -15,7 +15,3 @@ export const UserSchema = Type.Object({
 
 export const CreateUserPayloadSchema = Type.Omit(UserSchema, ['id']);
 export const CreateUserResponseSchema = Type.Omit(UserSchema, ['password']);
-
-export type User = Static<typeof UserSchema>;
-export type CreateUserResponse = Static<typeof CreateUserResponseSchema>;
-export type CreateUserPayload = Static<typeof CreateUserPayloadSchema>;
