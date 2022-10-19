@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import userRouter from './users';
+import { authRoutes } from './auth';
 
 const router = Router();
 
-router.use('/users', userRouter);
+router.use('/auth', authRoutes(router));
 
 router.get('/', (_, res) => {
   res.status(200).json({ success: true, message: 'Hello, Welcome to the V1 API!' });

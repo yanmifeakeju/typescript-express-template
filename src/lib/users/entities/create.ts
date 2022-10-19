@@ -1,12 +1,13 @@
 import { validator } from '../../../utils/validator';
 import { ApiError } from '../../errors/apiError';
-import { CreateUserPayload, CreateUserResponse, CreateUserPayloadSchema } from '../schema/schema';
+import { CreateUserPayloadSchema } from '../schema/schema';
+import { CreateUserPayload, SaveUser } from '../../../types/users';
 
-type SaveUserFunc = (args: CreateUserPayload) => Promise<CreateUserResponse>;
-
-export const create = (saveUser: SaveUserFunc) => {
+export const create = (saveUser: SaveUser) => {
   return async (data: CreateUserPayload) => {
     const { isValid, error } = validator(CreateUserPayloadSchema, data);
+
+    // Should user an error class defined for user.
     if (!isValid) throw new ApiError('UNPROCESSABLE_ENTITY', error, data);
 
     return saveUser(data);

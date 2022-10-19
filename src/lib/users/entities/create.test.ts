@@ -2,8 +2,8 @@ import test from 'ava';
 import Chance from 'chance';
 import { randomUUID } from 'crypto';
 import { ApiError } from '../../errors/apiError';
-import { CreateUserPayload, CreateUserResponse } from '../schema/schema';
 import { create } from './create';
+import { CreateUserPayload, CreateUserResponse } from '../../../types/users';
 
 const chance = new Chance();
 
