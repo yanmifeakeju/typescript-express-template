@@ -1,11 +1,42 @@
 import envSchema from 'env-schema';
-import { Type, Static } from '@sinclair/typebox';
+import { Static, Type } from '@sinclair/typebox';
+import { StringEnum } from '../lib/schema';
 
 const ConfigSchema = Type.Object({
+  NODE_ENV: StringEnum(['development', 'production', 'test']),
   SERVER_HOSTNAME: Type.String(),
   SERVER_PORT: Type.Number(),
   DATABASE_URL: Type.String()
 });
 
 type Config = Static<typeof ConfigSchema>;
-export const config = envSchema<Config>({ schema: ConfigSchema, dotenv: true });
+
+const config = envSchema<Config>({
+  schema: ConfigSchema,
+  dotenv: true,
+  ajv: {
+    customOptions(ajvInstance) {
+      const opts = [
+        'date-time',
+        'time',
+        'date',
+        'email',
+        'hostname',
+        'ipv4',
+        'ipv6',
+        'uri',
+        'uri-reference',
+        'uuid',
+        'uri-template',
+        'json-pointer',
+        'relative-json-pointer',
+        'regex'
+      ];
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      require('ajv-formats')(ajvInstance, opts);
+      return ajvInstance;
+    }
+  }
+});
+
+export default config;

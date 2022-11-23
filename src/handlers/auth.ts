@@ -1,4 +1,4 @@
-import logger from '../utils/logger';
+import logger from '../lib/utils/logger';
 import { SaveUser } from '../types/users';
 import asyncHandler from '../api/middlewares/asycHandler';
 import { NextFunction, Request, Response } from 'express';

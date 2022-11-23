@@ -1,5 +1,5 @@
 import { Prisma, User } from '@prisma/client';
-import { hashPassword } from '../../../utils/auth';
+import { hashPassword } from '../../utils/auth';
 import { ApiError } from '../../errors/apiError';
 import { CreateUserPayload, CreateUserResponse } from '../../../types/users';
 

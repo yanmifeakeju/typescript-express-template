@@ -1,4 +1,4 @@
-import { validator } from '../../../utils/validator';
+import { validator } from '../../utils/validator';
 import { ApiError } from '../../errors/apiError';
 import { CreateUserPayloadSchema } from '../schema/schema';
 import { CreateUserPayload, SaveUser } from '../../../types/users';
