@@ -58,5 +58,4 @@ test.serial('createNewUser() return userId when there is no duplicate record', a
   const result = await createNewUser(UserRepository)(data);
 
   t.deepEqual(expectedResult, result);
-  t.truthy(findDuplicateRecordStub.calledOnceWith(data.email));
 });
