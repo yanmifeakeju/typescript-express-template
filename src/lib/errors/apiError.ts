@@ -9,16 +9,14 @@ const code = {
 
 type ErrorType = keyof typeof code;
 
-class ApiError<T> extends Error {
+class ApiError extends Error {
   statusCode: number;
-  data?: { payload: T };
 
-  constructor(type: ErrorType, public message: string, private payload?: T) {
+  constructor(type: ErrorType, public message: string) {
     super(message);
     Object.setPrototypeOf(this, ApiError.prototype);
 
     this.statusCode = code[type];
-    this.data = payload && { payload };
 
     Error.captureStackTrace(this);
   }
