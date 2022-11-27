@@ -9,11 +9,9 @@ export const createNewUser = (repository: IUserRepository) => async (data: Creat
   assertIsValid(CreateUserParamSchema, data);
 
   const findDuplicateRecord = await repository.findDuplicateRecord(data.email);
-  if (findDuplicateRecord) {
-    throw new UserServiceError(UserErrorType.DUPLICATE_ENTRY, 'Email already exist.');
-  }
+  if (findDuplicateRecord) throw new UserServiceError(UserErrorType.DUPLICATE_ENTRY, 'Email already exist.');
 
-  const { userId } = await repository.createUser({ ...data, password: await hashPassword(data.password) });
+  const { id } = await repository.createUser({ ...data, password: await hashPassword(data.password) });
 
-  return { userId };
+  return { userId: id };
 };

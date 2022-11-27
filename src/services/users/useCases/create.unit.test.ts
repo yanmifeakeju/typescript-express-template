@@ -7,6 +7,7 @@ import { ValidationError } from '../../../lib/validator/error';
 import { UserErrorType, UserServiceError } from '../UserServiceError';
 import { postgresClient } from '../../../infrastructure/database/postgres/connection';
 import { UserRepository } from '../dataAccess';
+import { User } from '@prisma/client';
 
 const chance = new Chance();
 
@@ -51,11 +52,11 @@ test.serial('createNewUser() return userId when there is no duplicate record', a
   const findDuplicateRecordStub = sinon.stub(UserRepository, 'findDuplicateRecord');
   findDuplicateRecordStub.resolves(null);
 
-  const expectedResult = { userId: chance.guid() };
+  const expectedResult = { id: chance.guid() };
   const createUserRecordStub = sinon.stub(UserRepository, 'createUser');
-  createUserRecordStub.resolves(expectedResult);
+  createUserRecordStub.resolves(expectedResult as User);
 
   const result = await createNewUser(UserRepository)(data);
 
-  t.deepEqual(expectedResult, result);
+  t.is(expectedResult.id, result.userId);
 });
