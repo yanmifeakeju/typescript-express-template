@@ -5,7 +5,7 @@ import { CreateUserParams } from '../types';
 import { createNewUser } from './create';
 import { ValidationError } from '../../../lib/validator/error';
 import { UserErrorType, UserServiceError } from '../UserServiceError';
-import { postgresClient } from '../../../infrastructure/database/postgres/connection';
+import { postgresClient } from '../../../infrastructure/postgres/connection';
 import { UserRepository } from '../dataAccess';
 import { User } from '@prisma/client';
 

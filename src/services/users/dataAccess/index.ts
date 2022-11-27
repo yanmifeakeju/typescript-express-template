@@ -1,6 +1,6 @@
 import { CreateUserParams } from '../types';
 import { UserErrorType, UserServiceError } from '../UserServiceError';
-import { postgresClient } from '../../../infrastructure/database/postgres/connection';
+import { postgresClient } from '../../../infrastructure/postgres/connection';
 import { Prisma, User } from '@prisma/client';
 
 export interface IUserRepository {

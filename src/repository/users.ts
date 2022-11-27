@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client';
-import { postgresClient } from '../infrastructure/database/postgres/connection';
+import { postgresClient } from '../infrastructure/postgres/connection';
 const db = postgresClient.user;
 
 export const createRecord = (data: Prisma.UserCreateInput) => db.create({ data });

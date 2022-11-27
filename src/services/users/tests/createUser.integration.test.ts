@@ -1,7 +1,7 @@
 import test from 'ava';
 import { Chance } from 'chance';
 import { UserService } from '..';
-import { postgresClient } from '../../../infrastructure/database/postgres/connection';
+import { postgresClient } from '../../../infrastructure/postgres/connection';
 import { CreateUserParams } from '../types';
 import { UserErrorType, UserServiceError } from '../UserServiceError';
 
