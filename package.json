@@ -12,7 +12,6 @@
     "prettier": "prettier 'src/**/*.ts'",
     "prettier:fix": "prettier --write --loglevel='error' 'src/**/*.ts'",
     "postinstall": "npm run build",
-    "prepare": "husky install",
     "build": "npm run prisma:generate && tsc",
     "start": "npm run prisma:db:push && npm run build && node -r dotenv/config dist/index.js",
     "start:dev": "nodemon -r dotenv/config src/index.ts",
