@@ -1,6 +1,6 @@
 import { UserErrorType, UserServiceError } from '../../../services/users/UserServiceError';
 import { ValidationError } from '../../validator/error';
-import { ApiError } from './apiError';
+import { ApiError } from './ApiError';
 
 const mapUserServiceErrorToApiError = (err: UserServiceError) => {
   switch (err.errorType) {

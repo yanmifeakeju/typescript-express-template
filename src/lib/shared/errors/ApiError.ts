@@ -5,7 +5,7 @@ const code = {
   CONFLICT: 409,
   UNPROCESSABLE_ENTITY: 422,
   SERVICE_ERROR: 503
-};
+} as const;
 
 type ErrorType = keyof typeof code;
 

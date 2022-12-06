@@ -1,6 +1,6 @@
 import express from 'express';
 import { errorHandler } from '../handlers/requests/error';
-import { mapServiceErrorToApiError } from '../lib/errors/mapper';
+import { mapServiceErrorToApiError } from '../lib/shared/errors/mapper';
 import { checkContentTypeIsJSON, checkContentTypeIsSet, checkEmptyPayload } from './middlewares/checks';
 import v1Router from './v1';
 
