@@ -1,4 +1,4 @@
-import { hashPassword } from '../../../lib/utils/auth';
+import { hashPassword } from '../../../lib/utils/password';
 import { assertIsValid } from '../../../lib/validator';
 import { IUserRepository } from '../repository';
 import { CreateUserParamSchema } from '../schema';

@@ -1,5 +1,5 @@
 import { validate } from 'uuid';
-import { verifyPassword } from '../../../lib/utils/auth';
+import { verifyPassword } from '../../../lib/utils/password';
 import { assertIsValid } from '../../../lib/validator';
 import { UserRepository } from '../repository';
 import { EmailAndPasswordSchema } from '../schema';

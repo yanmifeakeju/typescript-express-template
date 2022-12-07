@@ -1,4 +1,4 @@
-import { UserErrorType, UserServiceError } from '../../../components/users/lib/UserServiceError';
+import { UserErrorType, UserServiceError } from '../../../models/users/lib/UserServiceError';
 import { ApiError } from './ApiError';
 import { ValidationError } from './ValidationError';
 
