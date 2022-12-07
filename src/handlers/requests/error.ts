@@ -1,10 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
-import { ApiError } from '../../lib/shared/errors/ApiError';
+import { mapServiceErrorToApiError } from '../../lib/shared/errors/mapper';
 
-export const errorHandler = (errorMapper: (err: Error) => ApiError) => {
-  return (error: Error, req: Request, res: Response, _next: NextFunction) => {
-    const apiError = errorMapper(error);
+export const errorHandler = (error: Error, req: Request, res: Response, _next: NextFunction) => {
+  const apiError = mapServiceErrorToApiError(error);
 
-    return res.status(apiError.statusCode).json({ success: false, message: apiError.message });
-  };
+  return res.status(apiError.statusCode).json({ success: false, message: apiError.message });
 };

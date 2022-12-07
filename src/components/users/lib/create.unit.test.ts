@@ -3,11 +3,11 @@ import sinon from 'sinon';
 import Chance from 'chance';
 import { CreateUserParams } from '../types';
 import { createNewUser } from './create';
-import { ValidationError } from '../../../lib/validator/error';
-import { UserErrorType, UserServiceError } from '../UserServiceError';
+import { UserErrorType, UserServiceError } from './UserServiceError';
 import { postgresClient } from '../../../infrastructure/postgres/connection';
-import { UserRepository } from '../dataAccess';
 import { User } from '@prisma/client';
+import ValidationError from 'ajv/dist/runtime/validation_error';
+import { UserRepository } from '../repository';
 
 const chance = new Chance();
 

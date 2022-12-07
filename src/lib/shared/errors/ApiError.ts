@@ -9,7 +9,7 @@ const code = {
 
 type ErrorType = keyof typeof code;
 
-class ApiError extends Error {
+export class ApiError extends Error {
   statusCode: number;
 
   constructor(type: ErrorType, public message: string) {
@@ -21,5 +21,3 @@ class ApiError extends Error {
     Error.captureStackTrace(this);
   }
 }
-
-export { ApiError };

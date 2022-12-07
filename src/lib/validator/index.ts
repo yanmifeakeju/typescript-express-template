@@ -1,6 +1,6 @@
 import addFormats from 'ajv-formats';
 import Ajv, { AnySchema, DefinedError } from 'ajv';
-import { ValidationError } from './error';
+import { ValidationError } from '../shared/errors/ValidationError';
 
 export const ajv = addFormats(new Ajv({}), [
   'date-time',
@@ -48,7 +48,5 @@ export function assertIsValid(schema: AnySchema, payload: unknown): void {
   const validate = ajv.compile(schema);
   const isValid = validate(payload);
 
-  if (!isValid) {
-    throw new ValidationError(generateValidationErrorMessage(validate.errors as DefinedError[]));
-  }
+  if (!isValid) throw new ValidationError(generateValidationErrorMessage(validate.errors as DefinedError[]));
 }

@@ -1,10 +1,10 @@
 import { validate } from 'uuid';
 import { verifyPassword } from '../../../lib/utils/auth';
 import { assertIsValid } from '../../../lib/validator';
-import { UserRepository } from '../dataAccess';
+import { UserRepository } from '../repository';
 import { EmailAndPasswordSchema } from '../schema';
 import { UserProfile } from '../types';
-import { UserErrorType, UserServiceError } from '../UserServiceError';
+import { UserErrorType, UserServiceError } from './UserServiceError';
 
 export const fetchUserProfile = async (userId: string): Promise<UserProfile> => {
   if (!validate(userId)) throw new UserServiceError(UserErrorType.INVALID_ARGUMENT, 'Please provide a userId');

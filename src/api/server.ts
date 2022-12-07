@@ -1,6 +1,5 @@
 import express from 'express';
 import { errorHandler } from '../handlers/requests/error';
-import { mapServiceErrorToApiError } from '../lib/shared/errors/mapper';
 import { checkContentTypeIsJSON, checkContentTypeIsSet, checkEmptyPayload } from './middlewares/checks';
 import v1Router from './v1';
 
@@ -15,6 +14,6 @@ app.use('/v1', v1Router);
 
 app.use((_, res) => res.status(404).json({ success: false, message: 'Route does not exist' }));
 
-app.use(errorHandler(mapServiceErrorToApiError));
+app.use(errorHandler);
 
 export default app;

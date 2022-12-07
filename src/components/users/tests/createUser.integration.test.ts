@@ -3,7 +3,7 @@ import { Chance } from 'chance';
 import { UserService } from '..';
 import { postgresClient } from '../../../infrastructure/postgres/connection';
 import { CreateUserParams } from '../types';
-import { UserErrorType, UserServiceError } from '../UserServiceError';
+import { UserErrorType, UserServiceError } from '../lib/UserServiceError';
 
 test.after(async (t) => {
   await postgresClient.user.deleteMany();

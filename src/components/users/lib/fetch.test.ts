@@ -1,10 +1,10 @@
 import test from 'ava';
-import { UserServiceError } from '../UserServiceError';
+import { UserServiceError } from './UserServiceError';
 import sinon from 'sinon';
 import { fetchUserProfile } from './fetch';
 import { v4 } from 'uuid';
-import { UserRepository } from '../dataAccess';
 import Chance from 'chance';
+import { UserRepository } from '../repository';
 
 const chance = new Chance();
 

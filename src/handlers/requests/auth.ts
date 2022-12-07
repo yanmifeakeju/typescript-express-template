@@ -1,6 +1,6 @@
 import asyncHandler from '../../api/middlewares/asyncHandler';
 import { NextFunction, Request, Response } from 'express';
-import { IUserService } from '../../services/users';
+import { IUserService } from '../../components/users';
 
 export const registerUser = (userService: IUserService) => {
   return asyncHandler(async (req: Request, res: Response, _next: NextFunction) => {

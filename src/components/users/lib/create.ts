@@ -1,9 +1,9 @@
 import { hashPassword } from '../../../lib/utils/auth';
 import { assertIsValid } from '../../../lib/validator';
-import { IUserRepository } from '../dataAccess';
+import { IUserRepository } from '../repository';
 import { CreateUserParamSchema } from '../schema';
 import { CreateUserParams } from '../types';
-import { UserErrorType, UserServiceError } from '../UserServiceError';
+import { UserErrorType, UserServiceError } from './UserServiceError';
 
 export const createNewUser = (repository: IUserRepository) => async (data: CreateUserParams) => {
   assertIsValid(CreateUserParamSchema, data);

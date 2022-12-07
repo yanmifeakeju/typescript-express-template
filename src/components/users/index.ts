@@ -1,6 +1,6 @@
-import { UserRepository } from './dataAccess';
+import { UserRepository } from './repository';
 import { CreateUserParams } from './types';
-import { createNewUser } from './useCases/create';
+import { createNewUser } from './lib/create';
 
 export interface IUserService {
   createUser: (params: CreateUserParams) => Promise<{ userId: string }>;
