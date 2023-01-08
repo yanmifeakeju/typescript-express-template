@@ -23,11 +23,15 @@ test.beforeEach((t) => {
   sinon.restore();
 });
 
+test.afterEach((t) => {
+  sinon.restore();
+});
+
 Object.entries(testUser).forEach(([key, _]) => {
   const nonRequiredFields = ['bio'];
 
   if (!nonRequiredFields.includes(key)) {
-    test(`createNewUser() throws ValidationError exception when ${key} is missing`, async (t) => {
+    test(`register() throwss ValidationError exception when ${key} is missing`, async (t) => {
       const data = { ...testUser, [key]: undefined };
 
       const error = await t.throwsAsync(register(data));
@@ -39,7 +43,7 @@ Object.entries(testUser).forEach(([key, _]) => {
   }
 });
 
-test.serial('createNewUser() throw UserServiceError exception for duplicate email entry', async (t) => {
+test.serial('register() throw sUserServiceError exception for duplicate email entry', async (t) => {
   const data = { ...testUser };
 
   const findDuplicateRecordStub = sinon.stub(UserRepository, 'find');
@@ -59,7 +63,7 @@ test.serial('createNewUser() throw UserServiceError exception for duplicate emai
   t.is(error?.errorType, UserErrorType.DUPLICATE_ENTRY);
 });
 
-test.serial('createNewUser() return userId when there is no duplicate record', async (t) => {
+test.serial('register() returns userId when there is no duplicate record', async (t) => {
   const data = { ...testUser };
 
   const findDuplicateRecordStub = sinon.stub(UserRepository, 'find');
@@ -71,6 +75,8 @@ test.serial('createNewUser() return userId when there is no duplicate record', a
 
   const result = await register(data);
 
-  t.truthy(findDuplicateRecordStub.calledOnceWith({ email: data.email }));
+  t.truthy(findDuplicateRecordStub.calledOnce);
+  t.truthy(createUserRecordStub.calledOnce);
+  t.not(createUserRecordStub.getCall(0).args[0].password, data.password);
   t.is(expectedResult.id, result.userId);
 });

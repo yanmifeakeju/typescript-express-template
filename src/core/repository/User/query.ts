@@ -6,7 +6,7 @@ export const save = (db: PrismaClient) => async (saveUserParams: Prisma.UserCrea
     const user = await db.user.create({ data: { ...saveUserParams } });
     return user;
   } catch (error) {
-    throw new Error('Error saving user');
+    throw createDatabaseError(error as Error, 'Error saving user');
   }
 };
 export const findById = (db: PrismaClient) => async (id: string) => {
@@ -14,7 +14,7 @@ export const findById = (db: PrismaClient) => async (id: string) => {
     const user = await db.user.findFirst({ where: { id } });
     return user;
   } catch (error) {
-    createDatabaseError(error as Error, `Error fetching user with ${id}`);
+    throw createDatabaseError(error as Error, `Error fetching user with ${id}`);
   }
 };
 
@@ -23,7 +23,7 @@ export const find = (db: PrismaClient) => async (searchUserParams: Prisma.UserWh
     const user = await db.user.findFirst({ where: { ...searchUserParams } });
     return user;
   } catch (error) {
-    createDatabaseError(error as Error, ' Error occurred fetching user');
+    throw createDatabaseError(error as Error, ' Error occurred fetching user');
   }
 };
 
@@ -33,6 +33,6 @@ export const update =
       const user = await db.user.update({ where: { ...whereParams }, data: { ...updateParams } });
       return user;
     } catch (error) {
-      createDatabaseError(error as Error, 'Error fetching user');
+      throw createDatabaseError(error as Error, 'Error fetching user');
     }
   };

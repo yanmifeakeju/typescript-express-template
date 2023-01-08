@@ -1,14 +1,14 @@
-import { PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient, User } from '@prisma/client';
 import { find, findById, save, update } from './query';
 
 export interface IUserRepository {
-  readonly update: (id: string) => Promise<unknown>;
-  readonly findById: (id: string) => Promise<unknown>;
-  readonly find: () => Promise<unknown>;
-  readonly save: () => Promise<unknown>;
+  readonly update: (where: Prisma.UserWhereUniqueInput, update: Prisma.UserUpdateInput) => Promise<User | null>;
+  readonly findById: (id: string) => Promise<User | null>;
+  readonly find: (searchUserParams: Prisma.UserWhereUniqueInput) => Promise<User | null>;
+  readonly save: (saveUserParams: Prisma.UserCreateInput) => Promise<User>;
 }
 
-export const Repository = (db: PrismaClient) => {
+export const Repository = (db: PrismaClient): IUserRepository => {
   return {
     save: save(db),
     findById: findById(db),

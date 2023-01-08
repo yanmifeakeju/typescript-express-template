@@ -15,6 +15,7 @@ export const register = async (data: CreateUserParams) => {
     email: data.email,
     first_name: data.firstName,
     last_name: data.lastName,
+    bio: data.bio,
     password: await hashPassword(data.password)
   });
 
