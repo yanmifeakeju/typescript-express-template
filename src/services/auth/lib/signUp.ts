@@ -1,8 +1,8 @@
-import { UserService } from '../../../models/users';
-import { CreateUserParams } from '../../../models/users/types';
+import { createNewUser } from '../../../core/users/lib/create';
+import { CreateUserParams } from '../../../core/users/types';
 
 export const signUpUser = async (data: CreateUserParams) => {
-  const user = await UserService.createUser(data);
+  const user = await createNewUser(data);
   return user;
   //generate jsonwebtoken
 };

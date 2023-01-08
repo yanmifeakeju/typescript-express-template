@@ -1,14 +1,16 @@
 import { validate } from 'uuid';
 import { verifyPassword } from '../../../lib/utils/password';
 import { assertIsValid } from '../../../lib/validator';
-import { UserRepository } from '../repository';
 import { EmailAndPasswordSchema } from '../schema';
 import { UserProfile } from '../types';
 import { UserErrorType, UserServiceError } from './UserServiceError';
+import { UserRepository } from '../../repository/User';
 
 export const fetchUserProfile = async (userId: string): Promise<UserProfile> => {
   if (!validate(userId)) throw new UserServiceError(UserErrorType.INVALID_ARGUMENT, 'Please provide a userId');
-  const user = await UserRepository.findUser({ id: userId });
+  const user = await UserRepository.findById(userId);
+
+  if (!user) throw 'user not found';
 
   return {
     id: user.id,
@@ -21,7 +23,9 @@ export const fetchUserProfile = async (userId: string): Promise<UserProfile> => 
 
 export const fetchUserWithAuthenticationCred = async (email: string, password: string): Promise<UserProfile> => {
   assertIsValid(EmailAndPasswordSchema, { email, password });
-  const user = await UserRepository.findUser({ email });
+  const user = await UserRepository.find({ email });
+
+  if (!user) throw 'user not found';
 
   if (!(await verifyPassword(password, user.password)))
     throw new UserServiceError(UserErrorType.ILLEGAL_ARGUMENT, 'Incorrect credentials');
