@@ -1,27 +1,25 @@
 import { Prisma, PrismaClient } from '@prisma/client';
 
-type UserModel = PrismaClient['user'];
-
-export const save = (db: UserModel) => async (saveUserParams: Prisma.UserCreateInput) => {
+export const save = (db: PrismaClient) => async (saveUserParams: Prisma.UserCreateInput) => {
   try {
-    const user = await db.create({ data: { ...saveUserParams } });
+    const user = await db.user.create({ data: { ...saveUserParams } });
     return user;
   } catch (error) {
     throw new Error('Error saving user');
   }
 };
-export const findById = (db: UserModel) => async (id: string) => {
+export const findById = (db: PrismaClient) => async (id: string) => {
   try {
-    const user = await db.findFirst({ where: { id } });
+    const user = await db.user.findFirst({ where: { id } });
     return user;
   } catch (error) {
     throw new Error('Error fetching user');
   }
 };
 
-export const find = (db: UserModel) => async (searchUserParams: Prisma.UserWhereUniqueInput) => {
+export const find = (db: PrismaClient) => async (searchUserParams: Prisma.UserWhereUniqueInput) => {
   try {
-    const user = await db.findFirst({ where: { ...searchUserParams } });
+    const user = await db.user.findFirst({ where: { ...searchUserParams } });
     return user;
   } catch (error) {
     throw new Error('Error fetching user');
@@ -29,9 +27,9 @@ export const find = (db: UserModel) => async (searchUserParams: Prisma.UserWhere
 };
 
 export const update =
-  (db: UserModel) => async (whereParams: Prisma.UserWhereUniqueInput, updateParams: Prisma.UserUpdateInput) => {
+  (db: PrismaClient) => async (whereParams: Prisma.UserWhereUniqueInput, updateParams: Prisma.UserUpdateInput) => {
     try {
-      const user = await db.update({ where: { ...whereParams }, data: { ...updateParams } });
+      const user = await db.user.update({ where: { ...whereParams }, data: { ...updateParams } });
       return user;
     } catch (error) {
       throw new Error('Error fetching user');

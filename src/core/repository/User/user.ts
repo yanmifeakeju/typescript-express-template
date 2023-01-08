@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { find, findById, save } from './query';
+import { find, findById, save, update } from './query';
 
 export interface IUserRepository {
   readonly update: (id: string) => Promise<unknown>;
@@ -10,8 +10,9 @@ export interface IUserRepository {
 
 export const Repository = (db: PrismaClient) => {
   return {
-    save: save(db.user),
-    findById: findById(db.user),
-    find: find(db.user)
+    save: save(db),
+    findById: findById(db),
+    find: find(db),
+    update: update(db)
   };
 };

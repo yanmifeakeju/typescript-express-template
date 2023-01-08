@@ -9,8 +9,6 @@ import { UserRepository } from '../../repository/User';
 import { hashPassword } from '../../../lib/utils/password';
 import { ValidationError } from '../../../lib/shared/errors/ValidationError';
 
-// UserRepository.find({ email: 'yanmifeakeju@gmail.com' }).then(console.log, console.error);
-
 const chance = new Chance();
 
 const testUser: CreateUserParams = {
