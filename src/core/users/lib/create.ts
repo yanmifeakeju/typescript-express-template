@@ -3,13 +3,13 @@ import { assertIsValid } from '../../../lib/validator';
 import { UserRepository } from '../../repository/User';
 import { CreateUserParamSchema } from '../schema';
 import { CreateUserParams } from '../types';
-import { UserErrorType, UserServiceError } from './UserServiceError';
+import { UserErrorType, UserError } from './UserServiceError';
 
-export const createNewUser = async (data: CreateUserParams) => {
+export const register = async (data: CreateUserParams) => {
   assertIsValid(CreateUserParamSchema, data);
 
   const findDuplicateRecord = await UserRepository.find({ email: data.email });
-  if (findDuplicateRecord) throw new UserServiceError(UserErrorType.DUPLICATE_ENTRY, 'Email already exist.');
+  if (findDuplicateRecord) throw new UserError(UserErrorType.DUPLICATE_ENTRY, 'Email already exist.');
 
   const { id } = await UserRepository.save({
     email: data.email,

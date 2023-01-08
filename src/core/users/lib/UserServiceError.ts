@@ -5,11 +5,11 @@ export enum UserErrorType {
   NOT_FOUND = 'NOT_FOUND'
 }
 
-export class UserServiceError extends Error {
+export class UserError extends Error {
   constructor(public errorType: UserErrorType, public message: string) {
     super(message);
 
-    Object.setPrototypeOf(this, UserServiceError.prototype);
+    Object.setPrototypeOf(this, UserError.prototype);
     Error.captureStackTrace(this);
   }
 }

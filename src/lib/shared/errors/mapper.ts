@@ -1,8 +1,8 @@
-import { UserErrorType, UserServiceError } from '../../../core/users/lib/UserServiceError';
+import { UserErrorType, UserError } from '../../../core/users/lib/UserServiceError';
 import { ApiError } from './ApiError';
 import { ValidationError } from './ValidationError';
 
-const mapUserServiceErrorToApiError = (err: UserServiceError) => {
+const mapUserServiceErrorToApiError = (err: UserError) => {
   switch (err.errorType) {
     case UserErrorType.DUPLICATE_ENTRY:
       return new ApiError('CONFLICT', err.message);
@@ -16,7 +16,7 @@ const mapUserServiceErrorToApiError = (err: UserServiceError) => {
 };
 
 export const mapServiceErrorToApiError = (err: Error) => {
-  if (err instanceof UserServiceError) return mapUserServiceErrorToApiError(err);
+  if (err instanceof UserError) return mapUserServiceErrorToApiError(err);
   if (err instanceof ValidationError) return new ApiError('BAD_REQUEST', err.message);
 
   return new ApiError('SERVICE_ERROR', 'An unexpected error occurred on the server');
