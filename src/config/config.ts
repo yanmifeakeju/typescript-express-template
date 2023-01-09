@@ -6,7 +6,8 @@ const ConfigSchema = Type.Object({
   NODE_ENV: StringEnum(['development', 'production', 'test']),
   SERVER_HOSTNAME: Type.String(),
   SERVER_PORT: Type.Number(),
-  DATABASE_URL: Type.String()
+  DATABASE_URL: Type.String(),
+  USER_JWT_SECRET: Type.String()
 });
 
 type Config = Static<typeof ConfigSchema>;
