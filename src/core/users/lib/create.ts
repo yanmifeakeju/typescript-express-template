@@ -3,7 +3,7 @@ import { assertIsValid } from '../../../lib/validator';
 import { UserRepository } from '../../repository/User';
 import { CreateUserParamSchema } from '../schema';
 import { CreateUserParams } from '../types';
-import { UserErrorType, UserError } from './UserServiceError';
+import { UserErrorType, UserError } from './UserError';
 
 export const register = async (data: CreateUserParams) => {
   assertIsValid(CreateUserParamSchema, data);

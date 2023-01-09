@@ -3,7 +3,7 @@ import { verifyPassword } from '../../../lib/utils/password';
 import { assertIsValid } from '../../../lib/validator';
 import { EmailAndPasswordSchema } from '../schema';
 import { UserProfile } from '../types';
-import { UserErrorType, UserError } from './UserServiceError';
+import { UserErrorType, UserError } from './UserError';
 import { UserRepository } from '../../repository/User';
 
 export const fetchProfile = async (userId: string): Promise<UserProfile> => {
@@ -21,7 +21,7 @@ export const fetchProfile = async (userId: string): Promise<UserProfile> => {
   };
 };
 
-export const validateAuthenticationCred = async (email: string, password: string): Promise<UserProfile> => {
+export const fetchWithAuthenticationCreds = async (email: string, password: string): Promise<UserProfile> => {
   assertIsValid(EmailAndPasswordSchema, { email, password });
   const user = await UserRepository.find({ email });
 

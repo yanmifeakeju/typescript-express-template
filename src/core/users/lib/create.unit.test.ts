@@ -3,7 +3,7 @@ import sinon from 'sinon';
 import Chance from 'chance';
 import { CreateUserParams } from '../types';
 import { register } from './create';
-import { UserErrorType, UserError } from './UserServiceError';
+import { UserErrorType, UserError } from './UserError';
 import { User } from '@prisma/client';
 import { UserRepository } from '../../repository/User';
 import { hashPassword } from '../../../lib/utils/password';

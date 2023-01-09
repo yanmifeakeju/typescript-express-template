@@ -1,5 +1,5 @@
 import test from 'ava';
-import { UserError } from './UserServiceError';
+import { UserError } from './UserError';
 import sinon from 'sinon';
 import { fetchProfile } from './fetch';
 import { v4 } from 'uuid';
