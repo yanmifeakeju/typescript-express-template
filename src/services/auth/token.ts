@@ -1,6 +1,6 @@
 import config from '../../config/config';
-import { createAuthToken } from '../../lib/utils/jwt';
+import { createToken } from '../../utils/jwt';
 
 export const generateAuthenticationToken = (userId: string) => {
-  return { error: null, data: { token: createAuthToken({ userId }, config.USER_JWT_SECRET, 3600) } };
+  return { error: null, data: { token: createToken({ userId }, config.USER_JWT_SECRET, 3600) } };
 };

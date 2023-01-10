@@ -1,7 +1,8 @@
 import addFormats from 'ajv-formats';
 import Ajv, { AnySchema, DefinedError } from 'ajv';
+import { ValidationError } from '../shared/errors/ValidationError';
 
-const ajv = addFormats(new Ajv({}), [
+export const ajv = addFormats(new Ajv({}), [
   'date-time',
   'time',
   'date',
@@ -31,6 +32,10 @@ function generateValidationErrorMessage(err: DefinedError[]) {
       case 'maxLength':
       case 'type':
         return `"${error.instancePath.replace('/', '.')}" ${error.message}`;
+      case 'enum':
+        return `"${error.instancePath.replace('/', '.')}" ${error.message}: [${error.params.allowedValues.join(', ')}]`;
+      case 'additionalProperties':
+        return `"${error.params.additionalProperty}" is not allowed.`;
       default:
         break;
     }
@@ -39,16 +44,9 @@ function generateValidationErrorMessage(err: DefinedError[]) {
   return 'Invalid payload.';
 }
 
-export function validator(
-  schema: AnySchema,
-  payload: unknown
-): { isValid: false; error: string } | { isValid: true; error: null } {
+export function assertIsValid(schema: AnySchema, payload: unknown): void {
   const validate = ajv.compile(schema);
-  const isValid = validate(payload);
+  const isValid = validate('');
 
-  if (!isValid) {
-    return { isValid, error: generateValidationErrorMessage(validate.errors as DefinedError[]) };
-  }
-
-  return { isValid: true, error: null };
+  if (!isValid) throw new ValidationError(generateValidationErrorMessage(validate.errors as DefinedError[]));
 }

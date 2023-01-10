@@ -1,5 +1,5 @@
-import { hashPassword } from '../../../lib/utils/password';
-import { assertIsValid } from '../../../lib/validator';
+import { assertIsValid } from '../../../utils/validator';
+import { hashPassword } from '../../../utils/password';
 import { UserRepository } from '../../repository/User';
 import { CreateUserParamSchema } from '../schema';
 import { CreateUserParams } from '../types';

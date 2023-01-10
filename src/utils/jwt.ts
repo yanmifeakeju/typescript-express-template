@@ -4,7 +4,7 @@ interface TokenPayload<T extends Record<string, unknown>> {
   data: T;
 }
 
-export const createAuthToken = <T extends Record<string, unknown>>(payload: T, secret: Secret, expiresIn?: number) => {
+export const createToken = <T extends Record<string, unknown>>(payload: T, secret: Secret, expiresIn?: number) => {
   const data: TokenPayload<T> = { data: payload };
   return jwt.sign(data, secret, { expiresIn });
 };

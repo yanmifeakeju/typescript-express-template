@@ -1,5 +1,5 @@
 import { Type } from '@sinclair/typebox';
-import { Nullable } from '../../../lib/shared/schema';
+import { Nullable } from '../../../shared/schema';
 
 export const UserSchema = Type.Object(
   {

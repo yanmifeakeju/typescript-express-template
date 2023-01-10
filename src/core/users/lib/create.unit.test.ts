@@ -6,8 +6,8 @@ import { register } from './create';
 import { UserErrorType, UserError } from './UserError';
 import { User } from '@prisma/client';
 import { UserRepository } from '../../repository/User';
-import { hashPassword } from '../../../lib/utils/password';
-import { ValidationError } from '../../../lib/shared/errors/ValidationError';
+import { ValidationError } from '../../../shared/errors/ValidationError';
+import { hashPassword } from '../../../utils/password';
 
 const chance = new Chance();
 
@@ -31,7 +31,7 @@ Object.entries(testUser).forEach(([key, _]) => {
   const nonRequiredFields = ['bio'];
 
   if (!nonRequiredFields.includes(key)) {
-    test(`register() throwss ValidationError exception when ${key} is missing`, async (t) => {
+    test(`register() throws ValidationError exception when ${key} is missing`, async (t) => {
       const data = { ...testUser, [key]: undefined };
 
       const error = await t.throwsAsync(register(data));

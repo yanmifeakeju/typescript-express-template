@@ -1,6 +1,6 @@
 import envSchema from 'env-schema';
 import { Static, Type } from '@sinclair/typebox';
-import { StringEnum } from '../lib/shared/schema';
+import { StringEnum } from '../shared/schema';
 
 const ConfigSchema = Type.Object({
   NODE_ENV: StringEnum(['development', 'production', 'test']),

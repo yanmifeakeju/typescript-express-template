@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { mapServiceErrorToApiError } from '../../lib/shared/errors/mapper';
+import { mapServiceErrorToApiError } from '../../shared/errors/mapper';
 
 export const errorHandler = (error: Error, req: Request, res: Response, _next: NextFunction) => {
   const apiError = mapServiceErrorToApiError(error);
