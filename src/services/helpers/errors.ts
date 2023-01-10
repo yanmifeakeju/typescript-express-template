@@ -1,5 +1,5 @@
 import { UserError } from '../../core/users/lib/UserError';
-import { ValidationError } from '../../lib/shared/errors/ValidationError';
+import { ValidationError } from '../../shared/errors/ValidationError';
 
 export const handleError = (error: Error) => {
   if (error instanceof ValidationError || error instanceof UserError) {
