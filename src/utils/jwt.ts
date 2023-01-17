@@ -11,5 +11,5 @@ export const createToken = <T extends Record<string, unknown>>(payload: T, secre
 
 export const decodeToken = <T extends Record<string, unknown>>(token: string, secret: Secret) => {
   const decoded = jwt.verify(token, secret) as JwtPayload;
-  return (<unknown>decoded.data) as TokenPayload<T>;
+  return (<unknown>decoded.data) as T;
 };
