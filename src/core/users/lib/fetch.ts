@@ -1,16 +1,16 @@
 import { validate } from 'uuid';
-
 import { EmailAndPasswordSchema } from '../schema';
 import { UserProfile } from '../types';
-import { UserErrorType, UserError } from './UserError';
-import { UserRepository } from '../../repository/User';
+import { UserErrorType, UserError } from '../../errors/UserError';
 import { assertIsValid } from '../../../utils/validator';
 import { verifyPassword } from '../../../utils/password';
+import { UserRepository } from '../../repository/user';
+import { postgresClient } from '../../../infrastructure/postgres/connection';
 
 export const fetchProfile = async (userId: string): Promise<UserProfile> => {
   if (!validate(userId)) throw new UserError(UserErrorType.INVALID_ARGUMENT, 'Please provide a valid userId');
-  const user = await UserRepository.findById(userId);
 
+  const user = await UserRepository.findUnique({ id: userId }, postgresClient);
   if (!user) throw new UserError(UserErrorType.NOT_FOUND, 'User profile not found.');
 
   return {
@@ -24,7 +24,7 @@ export const fetchProfile = async (userId: string): Promise<UserProfile> => {
 
 export const fetchWithAuthenticationCreds = async (email: string, password: string): Promise<UserProfile> => {
   assertIsValid(EmailAndPasswordSchema, { email, password });
-  const user = await UserRepository.find({ email });
+  const user = await UserRepository.findUnique({ email }, postgresClient);
 
   if (!user) throw new UserError(UserErrorType.NOT_FOUND, 'Invalid credentials.');
 

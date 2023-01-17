@@ -46,7 +46,7 @@ function generateValidationErrorMessage(err: DefinedError[]) {
 
 export function assertIsValid(schema: AnySchema, payload: unknown): void {
   const validate = ajv.compile(schema);
-  const isValid = validate('');
+  const isValid = validate(payload);
 
   if (!isValid) throw new ValidationError(generateValidationErrorMessage(validate.errors as DefinedError[]));
 }

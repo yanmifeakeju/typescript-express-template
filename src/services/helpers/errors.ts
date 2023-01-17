@@ -1,4 +1,4 @@
-import { UserError } from '../../core/users/lib/UserError';
+import { UserError } from '../../core/errors/UserError';
 import { ValidationError } from '../../shared/errors/ValidationError';
 
 export const handleError = (error: Error) => {

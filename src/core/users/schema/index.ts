@@ -13,6 +13,8 @@ export const UserSchema = Type.Object(
   { additionalProperties: false }
 );
 
+export const UpdateUserSchema = Type.Partial(Type.Pick(UserSchema, ['email', 'password']));
+
 export const CreateUserParamSchema = Type.Omit(UserSchema, ['id']);
 export const UserProfileSchema = Type.Omit(UserSchema, ['password']);
 export const EmailAndPasswordSchema = Type.Pick(UserSchema, ['email', 'password']);

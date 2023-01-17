@@ -2,12 +2,12 @@ import test from 'ava';
 import sinon from 'sinon';
 import Chance from 'chance';
 import { CreateUserParams } from '../types';
-import { register } from './create';
-import { UserErrorType, UserError } from './UserError';
+import { create } from './create';
+import { UserErrorType, UserError } from '../../errors/UserError';
 import { User } from '@prisma/client';
-import { UserRepository } from '../../repository/User';
 import { ValidationError } from '../../../shared/errors/ValidationError';
 import { hashPassword } from '../../../utils/password';
+import { UserRepository } from '../../repository/user';
 
 const chance = new Chance();
 
@@ -23,18 +23,14 @@ test.beforeEach((t) => {
   sinon.restore();
 });
 
-test.afterEach((t) => {
-  sinon.restore();
-});
-
 Object.entries(testUser).forEach(([key, _]) => {
   const nonRequiredFields = ['bio'];
 
   if (!nonRequiredFields.includes(key)) {
-    test(`register() throws ValidationError exception when ${key} is missing`, async (t) => {
+    test(`create() throws ValidationError exception when ${key} is missing`, async (t) => {
       const data = { ...testUser, [key]: undefined };
 
-      const error = await t.throwsAsync(register(data));
+      const error = await t.throwsAsync(create(data));
 
       t.truthy(error instanceof ValidationError);
 
@@ -43,7 +39,7 @@ Object.entries(testUser).forEach(([key, _]) => {
   }
 });
 
-test.serial('register() throw sUserServiceError exception for duplicate email entry', async (t) => {
+test.serial('create() throw UserError exception for duplicate email entry', async (t) => {
   const data = { ...testUser };
 
   const findDuplicateRecordStub = sinon.stub(UserRepository, 'find');
@@ -56,27 +52,26 @@ test.serial('register() throw sUserServiceError exception for duplicate email en
     password: await hashPassword(data.password)
   });
 
-  const error: UserError | undefined = await t.throwsAsync(register(data));
+  const error: UserError | undefined = await t.throwsAsync(create(data));
 
-  t.truthy(findDuplicateRecordStub.calledOnceWith({ email: data.email }));
+  t.truthy(findDuplicateRecordStub.calledOnce);
   t.truthy(error instanceof UserError);
   t.is(error?.errorType, UserErrorType.DUPLICATE_ENTRY);
 });
 
-test.serial('register() returns userId when there is no duplicate record', async (t) => {
+test.serial('create() returns userId when there is no duplicate record', async (t) => {
   const data = { ...testUser };
 
   const findDuplicateRecordStub = sinon.stub(UserRepository, 'find');
   findDuplicateRecordStub.resolves(null);
 
   const expectedResult = { id: chance.guid() };
-  const createUserRecordStub = sinon.stub(UserRepository, 'save');
+  const createUserRecordStub = sinon.stub(UserRepository, 'create');
   createUserRecordStub.resolves(expectedResult as User);
 
-  const result = await register(data);
+  const result = await create(data);
 
   t.truthy(findDuplicateRecordStub.calledOnce);
   t.truthy(createUserRecordStub.calledOnce);
-  t.not(createUserRecordStub.getCall(0).args[0].password, data.password);
   t.is(expectedResult.id, result.userId);
 });

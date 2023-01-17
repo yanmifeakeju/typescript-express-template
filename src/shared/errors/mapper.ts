@@ -1,4 +1,4 @@
-import { UserErrorType, UserError } from '../../core/users/lib/UserError';
+import { UserErrorType, UserError } from '../../core/errors/UserError';
 import { ApiError } from './ApiError';
 import { ValidationError } from './ValidationError';
 
