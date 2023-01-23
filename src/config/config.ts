@@ -7,7 +7,9 @@ const ConfigSchema = Type.Object({
   SERVER_HOSTNAME: Type.String(),
   SERVER_PORT: Type.Number(),
   DATABASE_URL: Type.String(),
-  USER_JWT_SECRET: Type.String()
+  USER_JWT_SECRET: Type.String(),
+  REDIS_URL: Type.String({ format: 'uri' }),
+  PASSWORD_JWT_SECRET: Type.String()
 });
 
 type Config = Static<typeof ConfigSchema>;
