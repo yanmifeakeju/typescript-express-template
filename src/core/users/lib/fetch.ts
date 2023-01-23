@@ -1,5 +1,4 @@
-import { validate } from 'uuid';
-import { EmailAndPasswordSchema } from '../schema';
+import { EmailAndPasswordSchema, EmailOrUserIdSchema } from '../schema';
 import { UserProfile } from '../types';
 import { UserErrorType, UserError } from '../../errors/UserError';
 import { assertIsValid } from '../../../utils/validator';
@@ -7,10 +6,14 @@ import { verifyPassword } from '../../../utils/password';
 import { UserRepository } from '../../repository/user';
 import { postgresClient } from '../../../infrastructure/postgres/connection';
 
-export const fetchProfile = async (userId: string): Promise<UserProfile> => {
-  if (!validate(userId)) throw new UserError(UserErrorType.INVALID_ARGUMENT, 'Please provide a valid userId');
+export const fetchProfile = async ({ userId, email }: { userId?: string; email?: string }): Promise<UserProfile> => {
+  assertIsValid(EmailOrUserIdSchema, { id: userId, email: email });
 
-  const user = await UserRepository.findUnique({ id: userId }, postgresClient);
+  const where = {
+    ...(userId && { id: userId }),
+    ...(email && { email })
+  };
+  const user = await UserRepository.findUnique({ ...where }, postgresClient);
   if (!user) throw new UserError(UserErrorType.NOT_FOUND, 'User profile not found.');
 
   return {

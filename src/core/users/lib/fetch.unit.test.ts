@@ -1,10 +1,10 @@
 import test from 'ava';
-import { UserError } from '../../errors/UserError';
 import sinon from 'sinon';
 import { fetchProfile } from './fetch';
 import { v4 } from 'uuid';
 import Chance from 'chance';
 import { UserRepository } from '../../repository/user';
+import { ValidationError } from '../../../shared/errors/ValidationError';
 
 const chance = new Chance();
 
@@ -13,9 +13,9 @@ test.beforeEach(() => {
 });
 
 test('fetchUserProfile() should throw error when passed incorrect uuid', async (t) => {
-  const error = await t.throwsAsync(fetchProfile('a randomstring'));
+  const error = await t.throwsAsync(fetchProfile({ userId: 'a randomstring' }));
 
-  t.truthy(error instanceof UserError);
+  t.truthy(error instanceof ValidationError);
 });
 
 test.serial('throws error when from user repository', async (t) => {
@@ -24,7 +24,7 @@ test.serial('throws error when from user repository', async (t) => {
   const stubbedUserRepository = sinon.stub(UserRepository, 'findUnique');
   stubbedUserRepository.rejects(new Error('User not found'));
 
-  const error = await t.throwsAsync(fetchProfile(userId));
+  const error = await t.throwsAsync(fetchProfile({ userId }));
 
   t.truthy(stubbedUserRepository.calledOnce);
   t.truthy(error?.message, 'User not found');
@@ -46,7 +46,7 @@ test.serial('returns correct user from UserRepository', async (t) => {
 
   stubbedUserRepository.resolves(testUser);
 
-  const result = await fetchProfile(userId);
+  const result = await fetchProfile({ userId });
 
   t.truthy(stubbedUserRepository.calledOnce);
   t.is(testUser.first_name, result.firstName);
