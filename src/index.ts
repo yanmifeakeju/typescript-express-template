@@ -1,6 +1,6 @@
 import { AddressInfo } from 'net';
 import app from './api/server';
-import config from './config/config';
+import config from './config/env';
 import logger from './utils/logger';
 
 const server = app.listen(config.SERVER_PORT || 3000, () => {

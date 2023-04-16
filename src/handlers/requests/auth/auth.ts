@@ -1,5 +1,5 @@
 import asyncHandler from '../../../api/middlewares/asyncHandler';
-import config from '../../../config/config';
+import config from '../../../config/env';
 import { loginUser } from '../../../services/auth/login';
 import { registerUser } from '../../../services/auth/register';
 import { generateAuthenticationToken } from '../../../services/auth/token';

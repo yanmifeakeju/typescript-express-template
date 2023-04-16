@@ -5,7 +5,7 @@ import {
   PrismaClientValidationError
 } from '@prisma/client/runtime';
 import logger from '../../utils/logger';
-import config from '../../config/config';
+import config from '../../config/env';
 
 export class DatabaseError extends Error {
   constructor(message: string, e: unknown) {

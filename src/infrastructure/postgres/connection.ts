@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import config from '../../config/config';
+import config from '../../config/env';
 
 export type PrismaTransaction = Omit<PrismaClient, '$connect' | '$disconnect' | '$on' | '$transaction' | '$use'>;
 export type DB = PrismaClient | PrismaTransaction;
