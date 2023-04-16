@@ -1,6 +1,6 @@
 import { Prisma, User } from '@prisma/client';
 import { DB } from '../../../infrastructure/postgres/connection';
-import { DatabaseError } from '../../errors/DatabaseError';
+import { DatabaseError } from '../../../shared/errors/DatabaseError';
 
 interface IUserRepository {
   readonly create: (data: Omit<Prisma.UserCreateInput, 'id'>, db: DB) => Promise<User>;

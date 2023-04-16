@@ -1,6 +1,5 @@
-import { EmailAndPasswordSchema, EmailOrUserIdSchema } from '../schema';
-import { UserProfile } from '../types';
-import { UserErrorType, UserError } from '../../errors/UserError';
+import { EmailAndPasswordSchema, EmailOrUserIdSchema, UserProfile } from '../schema';
+import { AppError } from '../../../shared/errors/AppError';
 import { assertIsValid } from '../../../utils/validator';
 import { verifyPassword } from '../../../utils/password';
 import { UserRepository } from '../../repository/user';
@@ -14,7 +13,7 @@ export const fetchProfile = async ({ userId, email }: { userId?: string; email?:
     ...(email && { email })
   };
   const user = await UserRepository.findUnique({ ...where }, postgresClient);
-  if (!user) throw new UserError(UserErrorType.NOT_FOUND, 'User profile not found.');
+  if (!user) throw new AppError('NOT_FOUND', 'User profile not found.');
 
   return {
     id: user.id,
@@ -29,10 +28,9 @@ export const fetchWithAuthenticationCreds = async (email: string, password: stri
   assertIsValid(EmailAndPasswordSchema, { email, password });
   const user = await UserRepository.findUnique({ email }, postgresClient);
 
-  if (!user) throw new UserError(UserErrorType.NOT_FOUND, 'Invalid credentials.');
+  if (!user) throw new AppError('NOT_FOUND', 'Invalid credentials.');
 
-  if (!(await verifyPassword(password, user.password)))
-    throw new UserError(UserErrorType.NOT_FOUND, 'Invalid credentials');
+  if (!(await verifyPassword(password, user.password))) throw new AppError('NOT_FOUND', 'Invalid credentials');
 
   return {
     id: user.id,

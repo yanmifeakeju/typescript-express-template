@@ -1,4 +1,4 @@
-import { Type } from '@sinclair/typebox';
+import { Static, Type } from '@sinclair/typebox';
 import { Nullable } from '../../../shared/schema';
 
 export const UserSchema = Type.Object(
@@ -16,7 +16,13 @@ export const UserSchema = Type.Object(
 export const UpdateUserSchema = Type.Partial(
   Type.Pick(UserSchema, ['firstName', 'lastName', 'email', 'password', 'bio'])
 );
+
 export const EmailOrUserIdSchema = Type.Partial(Type.Pick(UserSchema, ['email', 'id']));
 export const CreateUserParamSchema = Type.Omit(UserSchema, ['id']);
 export const UserProfileSchema = Type.Omit(UserSchema, ['password']);
 export const EmailAndPasswordSchema = Type.Pick(UserSchema, ['email', 'password']);
+
+export type CreateUserParams = Static<typeof CreateUserParamSchema>;
+export type UpdateUserParam = Static<typeof UpdateUserSchema>;
+export type UserProfile = Static<typeof UserProfileSchema>;
+export type User = Static<typeof UserSchema>;

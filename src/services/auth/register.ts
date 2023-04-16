@@ -1,5 +1,5 @@
 import { create } from '../../core/users/lib/create';
-import { CreateUserParams } from '../../core/users/types';
+import { CreateUserParams } from '../../core/users/schema';
 import { handleError } from '../helpers/errors';
 
 export const registerUser = async (data: CreateUserParams) => {

@@ -1,14 +1,14 @@
-import { UserErrorType, UserError } from '../../core/errors/UserError';
+import { AppError } from './AppError';
 import { ApiError } from './ApiError';
 import { ValidationError } from './ValidationError';
 
-const mapUserServiceErrorToApiError = (err: UserError) => {
+const mapUserServiceErrorToApiError = (err: AppError) => {
   switch (err.errorType) {
-    case UserErrorType.DUPLICATE_ENTRY:
+    case 'DUPLICATE_ENTRY':
       return new ApiError('CONFLICT', err.message);
-    case UserErrorType.ILLEGAL_ARGUMENT:
+    case 'ILLEGAL_ARGUMENT':
       return new ApiError('UNPROCESSABLE_ENTITY', err.message);
-    case UserErrorType.INVALID_ARGUMENT:
+    case 'INVALID_ARGUMENT':
       return new ApiError('BAD_REQUEST', err.message);
     default:
       return new ApiError('SERVICE_ERROR', 'An unexpected error occurred on the server.');
@@ -16,7 +16,7 @@ const mapUserServiceErrorToApiError = (err: UserError) => {
 };
 
 export const mapServiceErrorToApiError = (err: Error) => {
-  if (err instanceof UserError) return mapUserServiceErrorToApiError(err);
+  if (err instanceof AppError) return mapUserServiceErrorToApiError(err);
   if (err instanceof ValidationError) return new ApiError('BAD_REQUEST', err.message);
 
   return new ApiError('SERVICE_ERROR', 'An unexpected error occurred on the server');
