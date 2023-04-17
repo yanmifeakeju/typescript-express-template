@@ -2,7 +2,8 @@ const appErrorType = {
   INVALID_ARGUMENT: 'INVALID_ARGUMENT',
   ILLEGAL_ARGUMENT: 'ILLEGAL_ARGUMENT',
   DUPLICATE_ENTRY: 'DUPLICATE_ENTRY',
-  NOT_FOUND: 'NOT_FOUND'
+  NOT_FOUND: 'NOT_FOUND',
+  FATAL: 'FATAL'
 } as const;
 
 type AppErrorType = typeof appErrorType[keyof typeof appErrorType];
