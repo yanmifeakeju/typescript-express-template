@@ -1,9 +1,4 @@
-import {
-  PrismaClientInitializationError,
-  PrismaClientKnownRequestError,
-  PrismaClientUnknownRequestError,
-  PrismaClientValidationError
-} from '@prisma/client/runtime';
+import { Prisma } from '@prisma/client';
 import logger from '../../utils/logger';
 import config from '../../config/env';
 
@@ -20,12 +15,12 @@ export class DatabaseError extends Error {
 function ReportPrismaError(e: Error): void {
   if (config.NODE_ENV === 'development') logger.error(JSON.stringify(e, null, 2));
 
-  if (e instanceof PrismaClientInitializationError) {
+  if (e instanceof Prisma.PrismaClientInitializationError) {
     logger.error(`Database initialization failed: ${e.message}`);
     return;
   }
 
-  if (e instanceof PrismaClientKnownRequestError) {
+  if (e instanceof Prisma.PrismaClientKnownRequestError) {
     const { name, code, message } = e;
     const meta = e.meta as { target?: string[] };
 
@@ -38,14 +33,14 @@ function ReportPrismaError(e: Error): void {
     return;
   }
 
-  if (e instanceof PrismaClientUnknownRequestError) {
+  if (e instanceof Prisma.PrismaClientUnknownRequestError) {
     const { name, message } = e;
 
     logger.error(`Database Error: name: ${name} | message: ${message} }`);
     return;
   }
 
-  if (e instanceof PrismaClientValidationError) {
+  if (e instanceof Prisma.PrismaClientValidationError) {
     const { name, message } = e;
 
     logger.error(`Database Error: name: ${name} | message: ${message} }`);

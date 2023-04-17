@@ -2,25 +2,23 @@ import { assertIsValid } from '../../../utils/validator';
 import { hashPassword } from '../../../utils/password';
 import { CreateUserParamSchema, CreateUserParams } from '../schema';
 import { AppError } from '../../../shared/errors/AppError';
-import { UserRepository } from '../../repository/user';
-import { postgresClient } from '../../../infrastructure/postgres/connection';
+import { IUserRepository } from '../repositories/interface';
 
-export const create = async ({ firstName, lastName, bio = null, email, password }: CreateUserParams) => {
-  assertIsValid(CreateUserParamSchema, { firstName, lastName, bio, email, password });
+export const create =
+  (userRepository: IUserRepository) =>
+  async ({ firstName, lastName, bio = null, email, password }: CreateUserParams) => {
+    assertIsValid(CreateUserParamSchema, { firstName, lastName, bio, email, password });
 
-  const findDuplicateRecord = await UserRepository.find({ email }, postgresClient);
-  if (findDuplicateRecord) throw new AppError('DUPLICATE_ENTRY', 'Email already exists.');
+    const findDuplicateRecord = await userRepository.selectUserByEmail(email);
+    if (findDuplicateRecord) throw new AppError('DUPLICATE_ENTRY', 'Email already exists.');
 
-  const { id } = await UserRepository.create(
-    {
+    const user = await userRepository.insertUser({
       email,
-      first_name: firstName,
-      last_name: lastName,
+      firstName,
+      lastName,
       bio: bio,
       password: await hashPassword(password)
-    },
-    postgresClient
-  );
+    });
 
-  return { userId: id };
-};
+    return user;
+  };
