@@ -29,6 +29,36 @@ const insertUser =
     }
   };
 
+const selectUserById = (db: DB) => async (id: string) => {
+  const user = await db.user.findUnique({ where: { id } });
+  if (!user) return null;
+
+  return {
+    id: user.id,
+    bio: user.bio,
+    email: user.email,
+    firstName: user.first_name,
+    lastName: user.last_name,
+    password: user.password
+  };
+};
+
+const selectUserByEmail = (db: DB) => async (email: string) => {
+  const user = await db.user.findUnique({ where: { email } });
+  if (!user) return null;
+
+  return {
+    id: user.id,
+    bio: user.bio,
+    email: user.email,
+    firstName: user.first_name,
+    lastName: user.last_name,
+    password: user.password
+  };
+};
+
 export const UserRepository: IUserRepository = {
-  insertUser: insertUser(postgresClient)
+  insertUser: insertUser(postgresClient),
+  selectUserById: selectUserById(postgresClient),
+  selectUserByEmail: selectUserByEmail(postgresClient)
 };

@@ -1,7 +1,8 @@
 export type IUserService = {
-  readonly createUser: (params: { name: string }) => Promise<{ name: string }>;
-  readonly findUser: (id: string) => Promise<unknown>;
-  readonly initiateUserPasswordReset: (email: string) => Promise<unknown>;
-  readonly completeUserPasswordReset: (email: string) => Promise<unknown>;
-  readonly changeUserPassword: (id: string, userProps: unknown) => Promise<unknown>;
+  readonly create: (params: { name: string }) => Promise<{ name: string }>;
+  readonly findById: (id: string) => Promise<unknown>;
+  readonly validateAuthCreds: (email: string, password: string) => Promise<unknown>;
+  readonly initiatePasswordReset: (email: string) => Promise<unknown>;
+  readonly completePasswordReset: (email: string) => Promise<unknown>;
+  readonly changePassword: (id: string, userProps: unknown) => Promise<unknown>;
 };
