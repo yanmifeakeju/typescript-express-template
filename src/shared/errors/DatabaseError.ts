@@ -1,6 +1,6 @@
 import { Prisma } from '@prisma/client';
 import logger from '../../utils/logger';
-import config from '../../config/env';
+import env from '../../config/env';
 
 export class DatabaseError extends Error {
   constructor(message: string, e: unknown) {
@@ -13,7 +13,7 @@ export class DatabaseError extends Error {
 }
 
 function ReportPrismaError(e: Error): void {
-  if (config.NODE_ENV === 'development') logger.error(JSON.stringify(e, null, 2));
+  if (env.NODE_ENV === 'development') logger.error(JSON.stringify(e, null, 2));
 
   if (e instanceof Prisma.PrismaClientInitializationError) {
     logger.error(`Database initialization failed: ${e.message}`);

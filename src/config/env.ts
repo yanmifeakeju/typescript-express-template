@@ -14,7 +14,7 @@ const ConfigSchema = Type.Object({
 
 type Config = Static<typeof ConfigSchema>;
 
-const config = envSchema<Config>({
+const env = envSchema<Config>({
   schema: ConfigSchema,
   dotenv: true,
   ajv: {
@@ -42,4 +42,4 @@ const config = envSchema<Config>({
   }
 });
 
-export default config;
+export default env;
