@@ -10,10 +10,7 @@ export const registerUser = async (data: CreateUserParams) => {
   return { authToken };
 };
 
-export const decodeUserAuthToken = (token: string) => {
-  const decoded = decodeToken<{ userId: string }>(token, env.USER_JWT_SECRET);
-  return decoded;
-};
+export const decodeUserAuthToken = (token: string) => decodeToken<{ userId: string }>(token, env.USER_JWT_SECRET);
 
 export const getUserProfile = (userId: string) => UserService.findProfile({ userId });
 
