@@ -1,6 +1,6 @@
 import test from 'ava';
 import sinon from 'sinon';
-import { fetchUser } from './fetch';
+import { findUser } from './fetch';
 import { v4 } from 'uuid';
 import { ValidationError } from '../../../shared/errors/ValidationError';
 import { UserRepository } from '../repositories';
@@ -12,7 +12,7 @@ test.beforeEach(() => {
 });
 
 test('fetchUserProfile() should throw error when passed incorrect uuid', async (t) => {
-  const error = await t.throwsAsync(fetchUser(UserRepository)({ userId: 'a randomstring' }));
+  const error = await t.throwsAsync(findUser(UserRepository)({ userId: 'a randomstring' }));
 
   t.truthy(error instanceof ValidationError);
 });
@@ -23,7 +23,7 @@ test.serial('throws error when from user repository', async (t) => {
   const stubbedUserRepository = sinon.stub(UserRepository, 'selectUserById');
   stubbedUserRepository.rejects(new Error('User not found'));
 
-  const error = await t.throwsAsync(fetchUser(UserRepository)({ userId }));
+  const error = await t.throwsAsync(findUser(UserRepository)({ userId }));
 
   t.truthy(stubbedUserRepository.calledOnce);
   t.truthy(error?.message, 'User not found');

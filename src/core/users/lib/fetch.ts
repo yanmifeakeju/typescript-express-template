@@ -1,9 +1,10 @@
-import { EmailOrUserIdSchema } from '../schema';
+import { EmailAndPasswordSchema, EmailOrUserIdSchema, UserProfile } from '../schema';
 import { AppError } from '../../../shared/errors/AppError';
 import { assertIsValid } from '../../../utils/validator';
 import { IUserRepository } from '../repositories/interface';
+import { verifyPassword } from '../../../utils/password';
 
-export const fetchUser =
+export const findUser =
   (userRepository: IUserRepository) =>
   async ({ userId, email }: { userId?: string; email?: string }) => {
     assertIsValid(EmailOrUserIdSchema, { id: userId, email: email });
@@ -23,19 +24,22 @@ export const fetchUser =
     };
   };
 
-// export const fetchWithAuthenticationCreds = async (email: string, password: string): Promise<UserProfile> => {
-//   assertIsValid(EmailAndPasswordSchema, { email, password });
-//   const user = await UserRepository.findUnique({ email }, postgresClient);
+export const findWithAuthenticationCreds =
+  (userRepository: IUserRepository) =>
+  async (userEmail: string, password: string): Promise<UserProfile> => {
+    assertIsValid(EmailAndPasswordSchema, { email: userEmail, password });
+    const user = await userRepository.selectUserByEmail(userEmail);
+    if (!user) throw new AppError('NOT_FOUND', 'Invalid credentials.');
 
-//   if (!user) throw new AppError('NOT_FOUND', 'Invalid credentials.');
+    if (!(await verifyPassword(password, user.password))) throw new AppError('NOT_FOUND', 'Invalid credentials');
 
-//   if (!(await verifyPassword(password, user.password))) throw new AppError('NOT_FOUND', 'Invalid credentials');
+    const { id, email, firstName, lastName, bio } = user;
 
-//   return {
-//     id: user.id,
-//     email: user.email,
-//     firstName: user.first_name,
-//     lastName: user.last_name,
-//     bio: user.bio
-//   };
-// };
+    return {
+      id,
+      email,
+      firstName,
+      lastName,
+      bio
+    };
+  };
