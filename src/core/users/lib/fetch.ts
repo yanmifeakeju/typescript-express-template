@@ -3,7 +3,7 @@ import { AppError } from '../../../shared/errors/AppError';
 import { assertIsValid } from '../../../utils/validator';
 import { IUserRepository } from '../repositories/interface';
 
-export const fetch =
+export const fetchUser =
   (userRepository: IUserRepository) =>
   async ({ userId, email }: { userId?: string; email?: string }) => {
     assertIsValid(EmailOrUserIdSchema, { id: userId, email: email });

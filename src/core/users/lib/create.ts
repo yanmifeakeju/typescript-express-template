@@ -4,7 +4,7 @@ import { CreateUserParamSchema, CreateUserParams } from '../schema';
 import { AppError } from '../../../shared/errors/AppError';
 import { IUserRepository } from '../repositories/interface';
 
-export const create =
+export const createUser =
   (userRepository: IUserRepository) =>
   async ({ firstName, lastName, bio = null, email, password }: CreateUserParams) => {
     assertIsValid(CreateUserParamSchema, { firstName, lastName, bio, email, password });

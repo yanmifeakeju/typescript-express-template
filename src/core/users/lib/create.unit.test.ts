@@ -1,7 +1,7 @@
 import test from 'ava';
 import sinon from 'sinon';
 import Chance from 'chance';
-import { create } from './create';
+import { createUser } from './create';
 import { AppError } from '../../../shared/errors/AppError';
 import { ValidationError } from '../../../shared/errors/ValidationError';
 import { hashPassword } from '../../../utils/password';
@@ -29,7 +29,7 @@ Object.entries(testUser).forEach(([key, _]) => {
     test(`create() throws ValidationError exception when ${key} is missing`, async (t) => {
       const data = { ...testUser, [key]: undefined };
 
-      const error = await t.throwsAsync(create(UserRepository)(data));
+      const error = await t.throwsAsync(createUser(UserRepository)(data));
 
       t.truthy(error instanceof ValidationError);
 
@@ -51,7 +51,7 @@ test.serial('create() throw UserError exception for duplicate email entry', asyn
     password: await hashPassword(data.password)
   });
 
-  const error: AppError | undefined = await t.throwsAsync(create(UserRepository)(data));
+  const error: AppError | undefined = await t.throwsAsync(createUser(UserRepository)(data));
 
   t.truthy(findDuplicateRecordStub.calledOnce);
   t.truthy(error instanceof AppError);

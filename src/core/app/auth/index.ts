@@ -14,6 +14,6 @@ export const decodeUserAuthToken = (token: string) => decodeToken<{ userId: stri
 
 export const getUserProfile = (userId: string) => UserService.findProfile({ userId });
 
-export const loginUser = (data: unknown) => {
+export const loginUser = ({ email, password }: { email: string; password: string }) => {
   throw new Error('Unimplemented.');
 };
