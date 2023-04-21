@@ -35,5 +35,3 @@ export const completePasswordReset = async () => {
 export const changePassword = async () => {
   throw new Error('unimplemented');
 };
-
-initiatePasswordReset('yanmifeakeju@gmail.com').then(console.log, console.error);
