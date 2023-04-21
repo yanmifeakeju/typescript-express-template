@@ -1,6 +1,6 @@
 import { DB, postgresClient } from '../../../infrastructure/postgres/connection';
 import { DatabaseError } from '../../../shared/errors/DatabaseError';
-import { CreateUserParams, UserProfile } from '../schema';
+import { CreateUserParams, UpdateUserParam, UserProfile } from '../schema';
 import { IUserRepository } from './interface';
 
 const insertUser =
@@ -57,8 +57,30 @@ const selectUserByEmail = (db: DB) => async (email: string) => {
   };
 };
 
+const updateUser = (db: DB) => async (userId: string, userData: UpdateUserParam) => {
+  const updatedUser = await db.user.update({
+    where: { id: userId },
+    data: {
+      ...(userData.bio && { bio: userData.bio }),
+      ...(userData.email && { email: userData.email }),
+      ...(userData.password && { password: userData.password }),
+      ...(userData.firstName && { first_name: userData.firstName }),
+      ...(userData.lastName && { last_name: userData.lastName })
+    }
+  });
+  return {
+    id: updatedUser.id,
+    bio: updatedUser.bio,
+    email: updatedUser.email,
+    firstName: updatedUser.first_name,
+    lastName: updatedUser.last_name,
+    password: updatedUser.password
+  };
+};
+
 export const UserRepository: IUserRepository = {
   insertUser: insertUser(postgresClient),
   selectUserById: selectUserById(postgresClient),
-  selectUserByEmail: selectUserByEmail(postgresClient)
+  selectUserByEmail: selectUserByEmail(postgresClient),
+  updateUser: updateUser(postgresClient)
 };

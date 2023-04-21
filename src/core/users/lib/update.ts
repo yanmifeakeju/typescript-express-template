@@ -1,30 +1,24 @@
-// import { validate } from 'uuid';
-// import { assertIsValid } from '../../../utils/validator';
-// import { UpdateUserParam, UpdateUserSchema } from '../schema';
-// import { AppError } from '../../../shared/errors/AppError';
-// import { UserRepository } from '../../repository/user';
-// import { hashPassword } from '../../../utils/password';
-// import { postgresClient } from '../../../infrastructure/postgres/connection';
+import { validate } from 'uuid';
+import { assertIsValid } from '../../../utils/validator';
+import { UpdateUserParam, UpdateUserSchema } from '../schema';
+import { AppError } from '../../../shared/errors/AppError';
+import { hashPassword } from '../../../utils/password';
 
-// export const update = async (userId: string, updateParams: UpdateUserParam) => {
-//   if (!validate(userId)) throw new AppError('INVALID_ARGUMENT', 'Invalid user ID');
-//   assertIsValid(UpdateUserSchema, { ...updateParams });
+import { IUserRepository } from '../repositories/interface';
+import { RequireAtLeastOne } from '../../../shared/types';
 
-//   const user = await UserRepository.findUnique({ id: userId }, postgresClient);
-//   if (!user) throw new AppError('NOT_FOUND', 'User not found.');
+export const update =
+  (userRepository: IUserRepository) => async (userId: string, updateParams: RequireAtLeastOne<UpdateUserParam>) => {
+    if (!validate(userId)) throw new AppError('ILLEGAL_ARGUMENT', 'Invalid user ID');
+    assertIsValid(UpdateUserSchema, { ...updateParams });
 
-//   if (Object.keys(updateParams).length) {
-//     const data = {
-//       first_name: updateParams.firstName,
-//       last_name: updateParams.lastName,
-//       email: updateParams.email,
-//       password: updateParams.password
-//     };
+    const user = await userRepository.selectUserById(userId);
+    if (!user) throw new AppError('NOT_FOUND', 'User not found.');
 
-//     await UserRepository.update(
-//       { id: userId },
-//       { ...data, ...(data.password && { password: await hashPassword(data.password) }) },
-//       postgresClient
-//     );
-//   }
-// };
+    if (!Object.keys(updateParams).length) throw new AppError('ILLEGAL_ARGUMENT', 'No user update entry');
+
+    await userRepository.updateUser(userId, {
+      ...updateParams,
+      ...(updateParams.password && { password: await hashPassword(updateParams.password) })
+    });
+  };

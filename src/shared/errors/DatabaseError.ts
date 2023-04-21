@@ -1,5 +1,5 @@
 import { Prisma } from '@prisma/client';
-import logger from '../../utils/logger';
+import logger from '../logger';
 import env from '../../config/env';
 
 export class DatabaseError extends Error {

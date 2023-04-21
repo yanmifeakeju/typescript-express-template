@@ -1,4 +1,5 @@
 import env from '../../../config/env';
+import logger from '../../../shared/logger';
 import { createToken, decodeToken } from '../../../utils/jwt';
 import { CreateUserParams } from '../../users/schema';
 import { UserService } from '../../users/services';
@@ -20,3 +21,19 @@ export const loginUser = async ({ email, password }: { email: string; password: 
 
   return { authToken };
 };
+
+export const initiatePasswordReset = async (email: string) => {
+  const token = await UserService.initiatePasswordReset(email);
+  // Send Token as email
+  logger.info(token);
+};
+
+export const completePasswordReset = async () => {
+  throw new Error('unimplemented');
+};
+
+export const changePassword = async () => {
+  throw new Error('unimplemented');
+};
+
+initiatePasswordReset('yanmifeakeju@gmail.com').then(console.log, console.error);
