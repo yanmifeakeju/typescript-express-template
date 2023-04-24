@@ -6,6 +6,7 @@ import { hashPassword } from '../../../utils/password';
 
 import { IUserRepository } from '../repositories/interface';
 import { RequireAtLeastOne } from '../../../shared/types';
+import { ICacheService } from '../../../shared/cache/interface';
 
 export const update =
   (userRepository: IUserRepository) => async (userId: string, updateParams: RequireAtLeastOne<UpdateUserParam>) => {
@@ -21,4 +22,9 @@ export const update =
       ...updateParams,
       ...(updateParams.password && { password: await hashPassword(updateParams.password) })
     });
+  };
+
+export const updateUserPassword =
+  (cache: ICacheService, userRepository: IUserRepository) => async (requestHash: string, token: string) => {
+    // const email = await cache
   };

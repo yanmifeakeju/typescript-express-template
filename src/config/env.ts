@@ -9,7 +9,8 @@ const ConfigSchema = Type.Object({
   DATABASE_URL: Type.String(),
   USER_JWT_SECRET: Type.String(),
   REDIS_URL: Type.String({ format: 'uri' }),
-  PASSWORD_JWT_SECRET: Type.String()
+  PASSWORD_JWT_SECRET: Type.String(),
+  PASSWORD_RESET_SECRET: Type.String()
 });
 
 type Config = Static<typeof ConfigSchema>;

@@ -6,12 +6,16 @@ import { UserService } from '../../users/services';
 
 export const registerUser = async (data: CreateUserParams) => {
   const registeredUser = await UserService.createProfile(data);
-  const authToken = createToken<{ userId: string }>({ userId: registeredUser.id }, env.USER_JWT_SECRET, 3600);
+  const authToken = createToken<{ sessionId: string }>({ sessionId: registeredUser.id }, env.USER_JWT_SECRET, 3600);
 
   return { authToken };
 };
 
-export const decodeUserAuthToken = (token: string) => decodeToken<{ userId: string }>(token, env.USER_JWT_SECRET);
+export const decodeUserAuthToken = (token: string, purpose: 'session-auth' | 'password-reset') => {
+  if (purpose === 'session-auth') return decodeToken<{ sessionId: string }>(token, env.USER_JWT_SECRET);
+
+  return decodeToken<{ sessionId: string }>(token, env.USER_JWT_SECRET);
+};
 
 export const getUserProfile = (userId: string) => UserService.findProfile({ userId });
 
@@ -23,15 +27,17 @@ export const loginUser = async ({ email, password }: { email: string; password: 
 };
 
 export const initiatePasswordReset = async (email: string) => {
-  const token = await UserService.initiatePasswordReset(email);
-  // Send Token as email
-  logger.info(token);
+  const resetHash = await UserService.initiatePasswordReset(email);
+  logger.info(resetHash);
 };
 
-export const completePasswordReset = async () => {
+export const completePasswordReset = async (resetHash: string, token: string) => {
   throw new Error('unimplemented');
 };
 
-export const changePassword = async () => {
+export const changePassword = async (
+  userId: string,
+  { oldPassword, newPassword }: { oldPassword: string; newPassword: string }
+) => {
   throw new Error('unimplemented');
 };
