@@ -1,4 +1,4 @@
-import { Cache } from '../../../shared/cache';
+import { redis } from '../../../infrastructure/redis';
 import { createPasswordResetToken, createUser } from '../lib/create';
 import { findUser, findWithAuthenticationCreds } from '../lib/fetch';
 import { UserRepository } from '../repositories';
@@ -8,5 +8,5 @@ export const UserService: IUserService = {
   createProfile: createUser(UserRepository),
   findProfile: findUser(UserRepository),
   validateAuthCreds: findWithAuthenticationCreds(UserRepository),
-  initiatePasswordReset: createPasswordResetToken(Cache, UserRepository)
+  initiatePasswordReset: createPasswordResetToken(redis, UserRepository)
 };

@@ -3,10 +3,11 @@ import { hashPassword } from '../../../utils/password';
 import { CreateUserParamSchema, CreateUserParams } from '../schema';
 import { AppError } from '../../../shared/errors/AppError';
 import { IUserRepository } from '../repositories/interface';
-import { ICacheService } from '../../../shared/cache/interface';
 import randomstring from 'randomstring';
 import { createHash } from 'node:crypto';
 import env from '../../../config/env';
+import { Redis } from 'ioredis';
+import logger from '../../../shared/logger';
 
 export const createUser =
   (userRepository: IUserRepository) =>
@@ -28,21 +29,47 @@ export const createUser =
   };
 
 export const createPasswordResetToken =
-  (cache: ICacheService, userRepository: IUserRepository) => async (email: string) => {
+  (redisClient: Redis, userRepository: IUserRepository) => async (email: string) => {
     const user = await userRepository.selectUserByEmail(email);
-    if (!user) throw new AppError('ILLEGAL_ARGUMENT', 'Invalid credentials');
+    if (!user) throw new AppError('INVALID_ARGUMENT', 'Invalid credentials');
 
-    /**
-     *! Rate limit the number of password reset one request per min
-     *! Ensure that three consecutive failed reset attempts, temporarily bans the user.
-     */
+    await checkBannedRequest(redisClient, email);
+    await checkResetRequestCount(redisClient, email);
 
     const token = randomstring.generate({ length: 6, charset: 'numeric' });
-    await cache.set(`password:reset:${token}`, email, 1);
 
-    const requestHash = `${createHash('md5').update(`${user.id}.${env.PASSWORD_RESET_SECRET}.${token}`).digest('hex')}`;
+    const data = `${token}.${env.PASSWORD_RESET_SECRET}`;
+    const key = createHash('sha256').update(data).digest('hex');
 
-    //? Send a reset password email to the user
+    logger.info(token);
 
-    return requestHash;
+    await redisClient.setex(key, 900, email);
+
+    return { token };
   };
+
+async function checkBannedRequest(redisClient: Redis, email: string) {
+  const key = `password:request:ban:${email}`;
+  const isBanned = await redisClient.get(key);
+  if (isBanned) throw new AppError('FORBIDDEN', 'Email is currently banned from making this request.');
+}
+
+async function checkResetRequestCount(redisClient: Redis, email: string) {
+  const key = `password:request:count:${email}`;
+  await redisClient.incr(key);
+
+  const numberOfRequestWithinMinute = Number(await redisClient.get(key));
+
+  logger.info(`Email has made ${numberOfRequestWithinMinute}.`);
+
+  if (numberOfRequestWithinMinute >= 2) {
+    if (numberOfRequestWithinMinute >= 5) await banEmail(redisClient, email);
+    throw new AppError('TOO_MANY_REQUESTS', 'Too many requests. Please try again later.');
+  }
+}
+
+async function banEmail(redisClient: Redis, email: string) {
+  const key = `password:request:ban:${email}`;
+  await redisClient.setex(key, 1800, 'true');
+  //? Send a notification or perform other actions when email is banned
+}

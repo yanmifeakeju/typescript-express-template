@@ -8,6 +8,9 @@ const set = async (key: string, value: string | number, expirationInMinutes?: nu
   await redis.set(key, value);
 };
 
+const get = async (key: string) => redis.get(key);
+
 export const Cache: ICacheService = {
-  set
+  set,
+  get
 };

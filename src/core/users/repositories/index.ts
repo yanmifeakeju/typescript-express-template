@@ -44,38 +44,47 @@ const selectUserById = (db: DB) => async (id: string) => {
 };
 
 const selectUserByEmail = (db: DB) => async (email: string) => {
-  const user = await db.user.findUnique({ where: { email } });
-  if (!user) return null;
+  if (!email) throw new TypeError('Email is undefined');
+  try {
+    const user = await db.user.findUnique({ where: { email } });
+    if (!user) return null;
 
-  return {
-    id: user.id,
-    bio: user.bio,
-    email: user.email,
-    firstName: user.first_name,
-    lastName: user.last_name,
-    password: user.password
-  };
+    return {
+      id: user.id,
+      bio: user.bio,
+      email: user.email,
+      firstName: user.first_name,
+      lastName: user.last_name,
+      password: user.password
+    };
+  } catch (error) {
+    throw new DatabaseError(`Error fetching user with email`, error);
+  }
 };
 
 const updateUser = (db: DB) => async (userId: string, userData: UpdateUserParam) => {
-  const updatedUser = await db.user.update({
-    where: { id: userId },
-    data: {
-      ...(userData.bio && { bio: userData.bio }),
-      ...(userData.email && { email: userData.email }),
-      ...(userData.password && { password: userData.password }),
-      ...(userData.firstName && { first_name: userData.firstName }),
-      ...(userData.lastName && { last_name: userData.lastName })
-    }
-  });
-  return {
-    id: updatedUser.id,
-    bio: updatedUser.bio,
-    email: updatedUser.email,
-    firstName: updatedUser.first_name,
-    lastName: updatedUser.last_name,
-    password: updatedUser.password
-  };
+  try {
+    const updatedUser = await db.user.update({
+      where: { id: userId },
+      data: {
+        ...(userData.bio && { bio: userData.bio }),
+        ...(userData.email && { email: userData.email }),
+        ...(userData.password && { password: userData.password }),
+        ...(userData.firstName && { first_name: userData.firstName }),
+        ...(userData.lastName && { last_name: userData.lastName })
+      }
+    });
+    return {
+      id: updatedUser.id,
+      bio: updatedUser.bio,
+      email: updatedUser.email,
+      firstName: updatedUser.first_name,
+      lastName: updatedUser.last_name,
+      password: updatedUser.password
+    };
+  } catch (error) {
+    throw new DatabaseError(`Error updating user.`, error);
+  }
 };
 
 export const UserRepository: IUserRepository = {

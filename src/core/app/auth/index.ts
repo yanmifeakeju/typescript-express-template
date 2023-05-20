@@ -27,8 +27,8 @@ export const loginUser = async ({ email, password }: { email: string; password: 
 };
 
 export const initiatePasswordReset = async (email: string) => {
-  const resetHash = await UserService.initiatePasswordReset(email);
-  logger.info(resetHash);
+  const { token } = await UserService.initiatePasswordReset(email);
+  logger.info(token);
 };
 
 export const completePasswordReset = async (resetHash: string, token: string) => {
