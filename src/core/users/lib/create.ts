@@ -57,10 +57,14 @@ async function checkResetRequestCount(redisClient: Redis, userId: string) {
 
   const numberOfRequestWithinMinute = Number(await redisClient.get(key));
 
+  logger.info(key);
+  logger.info(numberOfRequestWithinMinute);
+
   // Number(null) converts to zero
-  if (numberOfRequestWithinMinute <= 1) {
+  if (numberOfRequestWithinMinute < 1) {
+    await redisClient.expire(key, UsersConstants.RESET_PASSWORD_COUNT_TTL);
+  } else {
     await redisClient.incr(key);
-    await redisClient.expire(key, 60);
   }
 
   if (numberOfRequestWithinMinute >= UsersConstants.MAX_PASSWORD_RESET_REQUEST_PER_MIN) {
@@ -69,13 +73,11 @@ async function checkResetRequestCount(redisClient: Redis, userId: string) {
     if (numberOfRequestWithinMinute >= UsersConstants.MAX_REQUESTS_BEFORE_BAN) await banEmail(redisClient, userId);
     throw new AppError('TOO_MANY_REQUESTS', 'Too many requests. Please try again later.');
   }
-
-  await redisClient.incr(key);
 }
 
 async function banEmail(redisClient: Redis, userId: string) {
   const key = `password:request:ban:${hashString(userId, env.PASSWORD_RESET_SECRET)}`;
-  await redisClient.setex(key, 1800, 'true');
+  await redisClient.setex(key, UsersConstants.BAN_PASSWORD_TTL, 'true');
 
   logger.info(`${userId} banned from making password request.`);
 
