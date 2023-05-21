@@ -4,11 +4,12 @@ import { CreateUserParamSchema, CreateUserParams } from '../schema';
 import { AppError } from '../../../shared/errors/AppError';
 import { IUserRepository } from '../repositories/interface';
 import randomstring from 'randomstring';
-import { createHash } from 'node:crypto';
 import env from '../../../config/env';
 import { Redis } from 'ioredis';
 import logger from '../../../shared/logger';
 import { UsersConstants } from '../../../shared/constants';
+import { hashString } from '../../../utils/strings';
+import { encrypt } from '../../../utils/encrpyt';
 
 export const createUser =
   (userRepository: IUserRepository) =>
@@ -38,9 +39,7 @@ export const createPasswordResetToken =
     await checkResetRequestCount(redisClient, user.id);
 
     const token = randomstring.generate({ length: 6, charset: 'numeric' });
-    const data = `${token}.${env.PASSWORD_RESET_SECRET}`;
-    const key = createHash('sha256').update(data).digest('hex');
-    await redisClient.setex(key, 900, email);
+    await redisClient.setex(hashString(token, env.PASSWORD_RESET_SECRET), 900, encrypt(email));
 
     logger.info(`${user.id} has generated a password reset token`);
 
@@ -48,13 +47,13 @@ export const createPasswordResetToken =
   };
 
 async function checkBannedRequest(redisClient: Redis, userId: string) {
-  const key = `${UsersConstants.BAN_PASSWORD_PREFIX}:${userId}`;
+  const key = `${UsersConstants.BAN_PASSWORD_PREFIX}:${hashString(userId, env.PASSWORD_RESET_SECRET)}`;
   const isBanned = await redisClient.exists(key);
   if (isBanned >= 1) throw new AppError('FORBIDDEN', 'Email is currently banned from making this request.');
 }
 
 async function checkResetRequestCount(redisClient: Redis, userId: string) {
-  const key = `${UsersConstants.RESET_PASSWORD_COUNT_PREFIX}:${userId}`;
+  const key = `${UsersConstants.RESET_PASSWORD_COUNT_PREFIX}:${hashString(userId, env.PASSWORD_RESET_SECRET)}`;
 
   const numberOfRequestWithinMinute = Number(await redisClient.get(key));
 
@@ -75,7 +74,7 @@ async function checkResetRequestCount(redisClient: Redis, userId: string) {
 }
 
 async function banEmail(redisClient: Redis, userId: string) {
-  const key = `password:request:ban:${userId}`;
+  const key = `password:request:ban:${hashString(userId, env.PASSWORD_RESET_SECRET)}`;
   await redisClient.setex(key, 1800, 'true');
 
   logger.info(`${userId} banned from making password request.`);
