@@ -12,10 +12,10 @@ export const encrypt = (value: string, key = encryptionKey) => {
   return `${iv.toString('hex')}:${encryptedEmail}`;
 };
 
-export const decrypt = (value: string, key = encryptionKey) => {
-  const [ivHex, encryptedData] = value.split(':');
+export const decrypt = (encryptedString: string, key = encryptionKey) => {
+  const [ivHex, encryptedData] = encryptedString.split(':');
   const decipher = createDecipheriv(algorithm, key, Buffer.from(ivHex, 'hex'));
-  let decryptedEmail = decipher.update(encryptedData, 'hex', 'utf8');
-  decryptedEmail += decipher.final('utf8');
-  return decryptedEmail;
+  let decryptedString = decipher.update(encryptedData, 'hex', 'utf8');
+  decryptedString += decipher.final('utf8');
+  return decryptedString;
 };
