@@ -41,7 +41,7 @@ export const createPasswordResetToken =
     const token = randomstring.generate({ length: UsersConstants.RESET_TOKEN_LENGTH, charset: 'numeric' });
     await redisClient.setex(
       hashString(token, env.PASSWORD_RESET_SECRET),
-      UsersConstants.RESET_PASSWORD_TLL,
+      UsersConstants.RESET_PASSWORD_TTL,
       encrypt(email)
     );
 
@@ -75,12 +75,13 @@ async function checkResetRequestCount(redisClient: Redis, userId: string) {
   if (numberOfRequestWithinMinute >= UsersConstants.MAX_PASSWORD_RESET_REQUEST_PER_MIN) {
     logger.info(`${userId} has made too many reset password request.`);
 
-    if (numberOfRequestWithinMinute >= UsersConstants.MAX_REQUESTS_BEFORE_BAN) await banEmail(redisClient, userId);
+    if (numberOfRequestWithinMinute >= UsersConstants.MAX_REQUESTS_BEFORE_BAN)
+      await banEmailRequest(redisClient, userId);
     throw new AppError('TOO_MANY_REQUESTS', 'Too many requests. Please try again later.');
   }
 }
 
-async function banEmail(redisClient: Redis, userId: string) {
+async function banEmailRequest(redisClient: Redis, userId: string) {
   const key = `password:request:ban:${hashString(userId, env.PASSWORD_RESET_SECRET)}`;
   await redisClient.setex(key, UsersConstants.BAN_PASSWORD_TTL, 'true');
 
