@@ -38,8 +38,12 @@ export const createPasswordResetToken =
     await checkBannedRequest(redisClient, user.id);
     await checkResetRequestCount(redisClient, user.id);
 
-    const token = randomstring.generate({ length: 6, charset: 'numeric' });
-    await redisClient.setex(hashString(token, env.PASSWORD_RESET_SECRET), 900, encrypt(email));
+    const token = randomstring.generate({ length: UsersConstants.RESET_TOKEN_LENGTH, charset: 'numeric' });
+    await redisClient.setex(
+      hashString(token, env.PASSWORD_RESET_SECRET),
+      UsersConstants.RESET_PASSWORD_TLL,
+      encrypt(email)
+    );
 
     logger.info(`${user.id} has generated a password reset token`);
 
