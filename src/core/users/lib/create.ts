@@ -9,7 +9,7 @@ import { Redis } from 'ioredis';
 import logger from '../../../shared/logger';
 import { UsersConstants } from '../../../shared/constants';
 import { hashString } from '../../../utils/strings';
-import { encrypt } from '../../../utils/encrpyt';
+import { encrypt } from '../../../utils/encrypt';
 
 export const createUser =
   (userRepository: IUserRepository) =>
