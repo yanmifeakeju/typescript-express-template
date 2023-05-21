@@ -66,6 +66,7 @@ async function checkResetRequestCount(redisClient: Redis, userId: string) {
 
   // Number(null) converts to zero
   if (numberOfRequestWithinMinute < 1) {
+    await redisClient.incr(key);
     await redisClient.expire(key, UsersConstants.RESET_PASSWORD_COUNT_TTL);
   } else {
     await redisClient.incr(key);
